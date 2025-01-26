@@ -30,13 +30,25 @@ export const DealCard: React.FC<DealCardProps> = ({
 }) => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasError, setHasError] = React.useState(false);
+  const [isFavorite, setIsFavorite] = React.useState(false);
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>      
+    <View style={styles.container} >    
+
       <View style={styles.imageContainer}>
       <View style={styles.timeLeftBadge}>
       <Text style={styles.timeLeftText}>{timeLeft} left</Text>
     </View>
+    <TouchableOpacity 
+          style={[styles.heartButton, isFavorite && styles.activeHeartButton]} 
+          onPress={() => setIsFavorite(!isFavorite)}
+        >
+          <Ionicons 
+            name={isFavorite ? "heart" : "heart-outline"} 
+            size={24} 
+            color={isFavorite ? "#FF0000" : "white"} 
+          />
+        </TouchableOpacity>
         <Image
           source={{ uri: imageUrl }}
           style={styles.logo}
@@ -80,7 +92,7 @@ export const DealCard: React.FC<DealCardProps> = ({
       >
         <Text style={styles.viewDealText}>View Deal</Text>
       </TouchableOpacity>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -132,18 +144,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 4,
   },
+  activeHeartButton: {
+    backgroundColor: 'rgba(255, 0, 0, 0.3)',
+  },
+  heartButton: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    zIndex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 20,
+    padding: 3,
+  },
   timeLeftBadge: {
     position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    padding: 6,
+    top: 6,
+    left: 6,
+    backgroundColor: 'rgba(255, 0, 0, 0.8)',
+    padding: 3,
     borderRadius: 4,
     zIndex: 1,
   },
   timeLeftText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 14,
   },
   ratingContainer: {
     flexDirection: 'row',

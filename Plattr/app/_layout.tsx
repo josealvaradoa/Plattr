@@ -76,7 +76,7 @@ export default function TabsLayout() {
                 <Ionicons
                   name="wallet-outline"
                   color={color}
-                  size={30}
+                  size={24}
                 />
               )
             }}
@@ -89,7 +89,7 @@ export default function TabsLayout() {
                 <Ionicons
                   name={focused ? 'person-circle-sharp' : 'person-circle-outline'}
                   color={color}
-                  size={30}
+                  size={24}
                 />
               ),
             }}
