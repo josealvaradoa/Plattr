@@ -1,4 +1,4 @@
-import { DealCardProps } from '../types/deals';
+import { DealCardProps, DealType } from '../types/deals';
 
 export const mockDeals: DealCardProps[] = [
   {
@@ -12,7 +12,8 @@ export const mockDeals: DealCardProps[] = [
     timeLeft: "2d",
     imageUrl: "https://images.squarespace-cdn.com/content/63bf57df5b3a643aac23cfed/894e0f1b-7ff9-45ae-b413-ce19132eceaa/IMG_0570.png",
     onPress: () => {},
-    onViewDeal: () => {}
+    onViewDeal: () => {},
+    dealType: DealType.REDEEMABLE
   },
   {
     id: '2',
@@ -20,12 +21,13 @@ export const mockDeals: DealCardProps[] = [
     location: "Downtown",
     rating: 4.5,
     reviewCount: 28,
-    dealDescription: "BOGO Sushi Rolls (Mon-Thu)",
+    dealDescription: "Happy Hour: $5 Cocktails (Mon-Fri 4PM-7PM)",
     distance: "0.8",
     timeLeft: "3d",
     imageUrl: "https://getluckyaf.com/wp-content/uploads/lucky-af.png",
     onPress: () => {},
-    onViewDeal: () => {}
+    onViewDeal: () => {},
+    dealType: DealType.INFORMATIONAL
   },
   {
     id: '3',
@@ -38,7 +40,8 @@ export const mockDeals: DealCardProps[] = [
     timeLeft: "6h",
     imageUrl: "https://example.com/perlys.jpg",
     onPress: () => {},
-    onViewDeal: () => {}
+    onViewDeal: () => {},
+    dealType: DealType.REDEEMABLE
   },
   {
     id: '4',
@@ -51,7 +54,8 @@ export const mockDeals: DealCardProps[] = [
     timeLeft: "1d",
     imageUrl: "https://media-api.xogrp.com/images/00ddaed3-fae6-401a-8a48-8cebc121d25d",
     onPress: () => {},
-    onViewDeal: () => {}
+    onViewDeal: () => {},
+    dealType: DealType.REDEEMABLE
   },
   {
     id: '5',
@@ -64,6 +68,21 @@ export const mockDeals: DealCardProps[] = [
     timeLeft: "4h",
     imageUrl: "https://images.squarespace-cdn.com/content/v1/658e23c62ad26370bbaf294f/4e3513d6-6cf6-47c0-9656-0674e8dff020/logo+sabai.png",
     onPress: () => {},
-    onViewDeal: () => {}
+    onViewDeal: () => {},
+    dealType: DealType.REDEEMABLE
+  },
+  {
+    id: '6',
+    restaurantName: "The Daily | Downtown",
+    location: "Downtown",
+    rating: 4.5,
+    reviewCount: 28,
+    dealDescription: "Happy Hour: $5 Cocktails (Mon-Fri 4PM-7PM)",
+    distance: "0.8",
+    timeLeft: "3d",
+    imageUrl: "https://getluckyaf.com/wp-content/uploads/lucky-af.png",
+    onPress: () => {},
+    onViewDeal: () => {},
+    dealType: DealType.INFORMATIONAL
   }
 ];

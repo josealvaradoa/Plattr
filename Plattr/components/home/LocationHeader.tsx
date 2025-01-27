@@ -14,7 +14,7 @@ export const LocationHeader: React.FC<LocationHeaderProps> = ({
   <View style={styles.container}>
     <Text style={styles.title}>Local Deals in {location}</Text>
     <TouchableOpacity onPress={onProfilePress}>
-      <Ionicons name="person-circle-outline" size={24} color="black" />
+      <Ionicons name="person-circle-outline" size={30} color="black" />
     </TouchableOpacity>
   </View>
 );
