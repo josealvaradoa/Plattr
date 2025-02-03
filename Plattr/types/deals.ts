@@ -10,8 +10,8 @@ export interface DealCardProps {
     rating: number;
     reviewCount: number;
     dealDescription: string;
+    dealDetails: string;
     distance: string;
-    timeLeft: string;
     imageUrl: string;
     onPress: () => void;
     onViewDeal: () => void;
@@ -27,6 +27,8 @@ export interface DealCardProps {
     maxRedemptions?: number;
     remainingRedemptions?: number;
     terms?: string[];
+    isRedeemed?: boolean;
+    redemptionCode?: string;
 }
 
 // Button text based on deal type

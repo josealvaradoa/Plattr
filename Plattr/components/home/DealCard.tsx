@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { DealCardProps, DealType } from '../../types/deals';
 import { Star } from 'lucide-react-native';
 
-const ratingMap: { [key: number]: string, } = {
+const ratingMap: { [key: number]: string } = {
     "1": "Terrible",
     "1.5": "Terrible",
     "2": "Bad",
@@ -14,8 +14,7 @@ const ratingMap: { [key: number]: string, } = {
     "4": "Very Good",
     "4.5": "Excellent",
     "5": "Outstanding"
-}
-
+};
 
 export const DealCard: React.FC<DealCardProps> = ({
     restaurantName,
@@ -24,108 +23,144 @@ export const DealCard: React.FC<DealCardProps> = ({
     reviewCount,
     dealDescription,
     distance,
-    timeLeft,
     imageUrl,
     onPress,
     onViewDeal,
     dealType,
+    expirationDate,
 }) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [hasError, setHasError] = React.useState(false);
     const [isFavorite, setIsFavorite] = React.useState(false);
-    const getButtonColor = (dealType: DealType) => {
-        switch (dealType) {
-          case DealType.REDEEMABLE:
-            return "#4dbf4d"; // Green for redeemable
-          case DealType.INFORMATIONAL:
-            return "#3a92fc"; // Gray for informational 
-          default:
-            return "#5e5e5e"; // Default fallback (e.g., black)
+    
+    const isExpired = expirationDate ? new Date(expirationDate) < new Date() : false;
+    const timeLeft = getTimeLeft(expirationDate);
+    function getTimeLeft(expirationDate?: string | Date): string {
+        if (!expirationDate) return '';
+      
+        // Convert to a Date object if it's a string
+        const expiration = 
+          typeof expirationDate === 'string' ? new Date(expirationDate) : expirationDate;
+      
+        const diff = expiration.getTime() - Date.now();
+        if (diff <= 0) return 'Expired';
+      
+        const hoursLeft = Math.ceil(diff / (1000 * 60 * 60));
+      
+        if (hoursLeft < 24) {
+          return `${hoursLeft}h`;
+        } else {
+          const daysLeft = Math.ceil(hoursLeft / 24);
+          return `${daysLeft}d`;
         }
-      };
+      }
+    const getButtonColor = (dealType: DealType, isExpired: boolean) => {
+        if (isExpired) return "#9CA3AF";
+        switch (dealType) {
+            case DealType.REDEEMABLE:
+                return "#4dbf4d";
+            case DealType.INFORMATIONAL:
+                return "#3a92fc";
+            default:
+                return "#5e5e5e";
+        }
+    };
+
     return (
-        <View style={styles.container} >
-
-            <View style={styles.imageContainer}>
-                <View style={styles.timeLeftBadge}>
-                <Ionicons
-                            name={"hourglass-outline"}
-                            size={16}
-                            color={"white"}
+        <View style={styles.container}>
+            <View style={[styles.contentWrapper, isExpired && styles.expiredOverlay]}>
+                <View style={styles.imageContainer}>
+                    {!isExpired  &&  dealType === DealType.REDEEMABLE && (
+                        <View style={styles.timeLeftBadge}>
+                            <Ionicons name="hourglass-outline" size={16} color="white" />
+                            <Text style={styles.timeLeftText}>{timeLeft}</Text>
+                        </View>
+                    )}
+                    {!isExpired && (
+                    <TouchableOpacity
+                        style={[styles.heartButton, isFavorite && styles.activeHeartButton]}
+                        onPress={() => setIsFavorite(!isFavorite)}
+                        disabled={isExpired}
+                    >
+                        <Ionicons
+                            name={isFavorite ? "heart" : "heart-outline"}
+                            size={24}
+                            color={isFavorite ? "#FF0000" : "white"}
                         />
-                    <Text style={styles.timeLeftText}>
-                        {timeLeft} left</Text>
-                </View>
-                <TouchableOpacity
-                    style={[styles.heartButton, isFavorite && styles.activeHeartButton]}
-                    onPress={() => setIsFavorite(!isFavorite)}
-                >
-                    <Ionicons
-                        name={isFavorite ? "heart" : "heart-outline"}
-                        size={24}
-                        color={isFavorite ? "#FF0000" : "white"}
+                    </TouchableOpacity>
+                    )}
+                    <Image
+                        source={{ uri: imageUrl }}
+                        style={styles.logo}
+                        resizeMode="contain"
+                        onLoadStart={() => setIsLoading(true)}
+                        onLoadEnd={() => setIsLoading(false)}
+                        onError={() => setHasError(true)}
                     />
+                    {isLoading && (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color="#333" />
+                        </View>
+                    )}
+                    {hasError && (
+                        <View style={styles.errorContainer}>
+                            <Ionicons name="image-outline" size={32} color="#666" />
+                            <Text style={styles.errorText}>Image unavailable</Text>
+                        </View>
+                    )}
+                </View>
+
+                <Text style={styles.restaurantName}>{restaurantName}</Text>
+
+                <View style={styles.ratingContainer}>
+                    <Star size={16} color="#FFB800" />
+                    <Text style={styles.ratingText}>
+                        {rating} {ratingMap[rating]} ({reviewCount}K)
+                    </Text>
+                </View>
+
+                <Text style={styles.dealDescription}>{dealDescription}</Text>
+
+                <View style={styles.locationContainer}>
+                    <Ionicons name="location-outline" size={16} color="gray" />
+                    <Text style={styles.locationText}>{distance} Miles Away</Text>
+                </View>
+
+                <TouchableOpacity
+                    style={[
+                        styles.viewDealButton,
+                        { backgroundColor: getButtonColor(dealType, isExpired) }
+                    ]}
+                    onPress={onViewDeal}
+                    disabled={isExpired}
+                >
+                    <Text style={styles.viewDealText}>
+                        {isExpired ? 'Expired' : dealType === DealType.REDEEMABLE ? 'Redeem Deal' : 'View Details'}
+                    </Text>
                 </TouchableOpacity>
-                <Image
-                    source={{ uri: imageUrl }}
-                    style={styles.logo}
-                    resizeMode="contain"
-                    onLoadStart={() => setIsLoading(true)}
-                    onLoadEnd={() => setIsLoading(false)}
-                    onError={() => setHasError(true)}
-                />
-                {isLoading && (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color="#333" />
-                    </View>
-                )}
-                {hasError && (
-                    <View style={styles.errorContainer}>
-                        <Ionicons name="image-outline" size={32} color="#666" />
-                        <Text style={styles.errorText}>Image unavailable</Text>
-                    </View>
-                )}
             </View>
-
-            <Text style={styles.restaurantName}>{restaurantName}</Text>
-
-            <View style={styles.ratingContainer}>
-            <Star size={16} color="#FFB800" />
-                <Text style={styles.ratingText}>
-                    {rating} {ratingMap[rating]} ({reviewCount}K)
-                </Text>
-            </View>
-
-            <Text style={styles.dealDescription}>{dealDescription}</Text>
-
-            <View style={styles.locationContainer}>
-                <Ionicons name="location-outline" size={16} color="gray" />
-                <Text style={styles.locationText}>{distance} Miles Away</Text>
-            </View>
-
-            <TouchableOpacity
-                style={[styles.viewDealButton, { backgroundColor: getButtonColor(dealType) }]}
-                onPress={onViewDeal}
-            >
-                <Text style={styles.viewDealText}>
-                    {dealType === DealType.REDEEMABLE ? 'Redeem Deal' : 'View Details'}
-                </Text>
-            </TouchableOpacity>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
         margin: 16,
         backgroundColor: 'white',
         borderRadius: 12,
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 2
+    },
+    contentWrapper: {
         padding: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
+    },
+    expiredOverlay: {
+        opacity: 0.6,
+        backgroundColor: 'rgba(243, 244, 246, 0.8)',
     },
     imageContainer: {
         position: 'relative',
