@@ -2,7 +2,6 @@
 import { DealCardProps } from '@/types/deals';
 import { filterExpiredDeals } from './filterExpired';
 import { computeDealScore } from './scoring';
-import { parseDistance } from './parseDistance';
 export function getProcessedDeals(deals: DealCardProps[]): DealCardProps[] {
   // 1. Filter out invalid/expired deals
   const validDeals = deals.filter(filterExpiredDeals);
