@@ -43,21 +43,16 @@ const ExplorePage = () => (
           />
           <Text style={styles.timeLeftText}>
             Trending Near You</Text>
-        </View>
-
-        
+        </View>        
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.restaurantScroll}
           >
-
             {trendingRestaurants.map((restaurant, index) => (
               <RestaurantCard key={index} restaurant={restaurant} />
             ))}
           </ScrollView>
-
-
       </View>
 
       <View style={styles.trendingRestaurantCard}>

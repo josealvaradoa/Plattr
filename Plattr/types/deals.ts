@@ -1,6 +1,7 @@
 export enum DealType {
     INFORMATIONAL = 'informational',
-    REDEEMABLE = 'redeemable'
+    REDEEMABLE = 'redeemable',
+    // Add any other types if necessary
 }
 
 export interface DealCardProps {

@@ -21,9 +21,11 @@ interface DealModalProps {
   onClose: () => void;
   deal: DealCardProps;
   onRedeem?: (dealId: string) => Promise<void>;
+  isEmbedded?: boolean; // New prop to indicate if this is embedded in a restaurant profile
 }
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH = Dimensions.get('window').width;
 const DISMISS_THRESHOLD = 150;
 
 const DealModal: React.FC<DealModalProps> = ({
@@ -31,6 +33,7 @@ const DealModal: React.FC<DealModalProps> = ({
   onClose,
   deal,
   onRedeem,
+  isEmbedded = false, // Default to false for backward compatibility
 }) => {
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [redemptionError, setRedemptionError] = useState<string | null>(null);
@@ -38,6 +41,7 @@ const DealModal: React.FC<DealModalProps> = ({
   const slideAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  // Configure pan responder for both modes (embedded and non-embedded)
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -157,6 +161,94 @@ const DealModal: React.FC<DealModalProps> = ({
     );
   };
 
+  // Common content to be rendered in both modal and embedded modes
+  const renderContent = () => (
+    <>
+      <ScrollView 
+        style={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {!isEmbedded && (
+          <Text style={styles.restaurant}>{deal.restaurantName}</Text>
+        )}
+        <Text style={styles.title}>{deal.dealDescription}</Text>
+        <View style={styles.termsContainer}>
+          <Text style={styles.termsTitle}>Deal Details</Text>
+          <Text style={styles.termsText}>{deal.dealDetails}</Text>
+        </View>
+        <View style={styles.termsContainer}>
+          <Text style={styles.termsTitle}>Terms & Conditions</Text>
+          {Array.isArray(deal.terms) ? (
+            deal.terms.map((term, index) => (
+              <View key={index} style={styles.termItem}>
+                <View style={styles.bulletPoint} />
+                <Text style={styles.termsText}>{term}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.termsText}>{deal.terms}</Text>
+          )}
+        </View>
+        {deal.expirationDate && (
+          <Text style={styles.expiry}>
+            Valid until: {new Date(deal.expirationDate).toLocaleDateString()}
+          </Text>
+        )}
+
+        {deal.maxRedemptions && (
+          <View style={styles.redemptionInfo}>
+            <Ionicons name="repeat-outline" size={16} color="#666" style={styles.infoIcon} />
+            <Text style={styles.infoText}>
+              {deal.remainingRedemptions !== undefined 
+                ? `${deal.remainingRedemptions} of ${deal.maxRedemptions} redemptions left`
+                : `${deal.maxRedemptions} max redemptions`}
+            </Text>
+          </View>
+        )}
+
+        {renderRedemptionSection()}
+      </ScrollView>
+    </>
+  );
+
+  // If this component is embedded, render it as a modal-like overlay within the parent view
+  if (isEmbedded) {
+    return (
+      <View style={styles.embeddedOverlayContainer}>
+        {/* Semi-transparent backdrop to click out */}
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.embeddedBackdrop} />
+        </TouchableWithoutFeedback>
+        
+        {/* The actual embedded modal */}
+        <Animated.View 
+          style={[
+            styles.embeddedModalContainer,
+            {
+              transform: [{ translateY: slideAnim }]
+            }
+          ]}
+        >
+          <View {...panResponder.panHandlers}>
+            <View style={styles.handleBar} />
+            <View style={styles.header}>
+              <TouchableOpacity 
+                onPress={onClose}
+                style={styles.backButton}
+              >
+                <Ionicons name="chevron-back" size={24} color="#007AFF" />
+                <Text style={styles.backText}>Back to Deals</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          
+          {renderContent()}
+        </Animated.View>
+      </View>
+    );
+  }
+
+  // Original modal behavior for non-embedded use
   return (
     <Modal
       animationType="none"
@@ -195,28 +287,7 @@ const DealModal: React.FC<DealModalProps> = ({
             <View style={styles.header} />
           </View>
 
-          <ScrollView 
-            style={styles.content}
-            showsVerticalScrollIndicator={false}
-          >
-            <Text style={styles.restaurant}>{deal.restaurantName}</Text>
-            <Text style={styles.title}>{deal.dealDescription}</Text>
-            <View style={styles.termsContainer}>
-              <Text style={styles.termsTitle}>Deal Details</Text>
-              <Text style={styles.termsText}>{deal.dealDetails}</Text>
-            </View>
-            <View style={styles.termsContainer}>
-              <Text style={styles.termsTitle}>Terms & Conditions</Text>
-              <Text style={styles.termsText}>{deal.terms}</Text>
-            </View>
-            {deal.expirationDate && (
-              <Text style={styles.expiry}>
-                Valid until: {deal.expirationDate}
-              </Text>
-            )}
-
-            {renderRedemptionSection()}
-          </ScrollView>
+          {renderContent()}
         </View>
       </Animated.View>
     </Modal>
@@ -231,7 +302,46 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingHorizontal: 16,
     paddingBottom: Platform.OS === 'ios' ? 40 : 24,
-    maxHeight: '100%',
+    maxHeight: '80%', // Limit height to 80% of screen
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  // Styles for embedded mode
+  embeddedOverlayContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  embeddedBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  embeddedModalContainer: {
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingTop: 8,
+    paddingHorizontal: 16,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+    width: '100%',
+    maxHeight: '80%', // Limit height to 80% of screen
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -254,8 +364,19 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingVertical: 8,
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EFEFEF',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backText: {
+    fontSize: 16,
+    color: '#007AFF',
+    marginLeft: 4,
   },
   content: {
     paddingVertical: 16,
@@ -285,6 +406,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     lineHeight: 20,
+  },
+  termItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 6,
+  },
+  bulletPoint: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#666',
+    marginTop: 8,
+    marginRight: 8,
   },
   expiry: {
     fontSize: 14,
@@ -345,6 +479,18 @@ const styles = StyleSheet.create({
     color: '#FF3B30',
     marginTop: 8,
     textAlign: 'center',
+  },
+  redemptionInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  infoIcon: {
+    marginRight: 8,
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#666',
   },
 });
 
