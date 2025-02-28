@@ -17,10 +17,6 @@ const MenuView: React.FC<MenuViewProps> = ({ restaurant }) => {
     setSelectedCategory(category);
   }, []);
   
-  const handleSelectItem = useCallback((itemId: string) => {
-    // Could implement scrolling to the item in the full menu
-    console.log(`Item selected: ${itemId}`);
-  }, []);
   
   if (!restaurant.menu) {
     return (
@@ -56,11 +52,7 @@ const MenuView: React.FC<MenuViewProps> = ({ restaurant }) => {
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
       />
-      
-      {popularItems.length > 0 && selectedCategory === 'all' && (
-        <PopularItems items={popularItems} onSelectItem={handleSelectItem} />
-      )}
-      
+ 
       {selectedCategory === 'all' ? (
         // Display all categories
         Object.entries(itemsByCategory).map(([category, items]) => (

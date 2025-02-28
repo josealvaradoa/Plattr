@@ -5,10 +5,9 @@ import { MenuItem } from './types';
 
 interface PopularItemsProps {
   items: MenuItem[];
-  onSelectItem?: (itemId: string) => void;
 }
 
-const PopularItems: React.FC<PopularItemsProps> = ({ items, onSelectItem }) => {
+const PopularItems: React.FC<PopularItemsProps> = ({ items}) => {
   if (!items || items.length === 0) {
     return null;
   }
@@ -26,7 +25,6 @@ const PopularItems: React.FC<PopularItemsProps> = ({ items, onSelectItem }) => {
           <TouchableOpacity 
             key={item.id} 
             style={styles.itemCard}
-            onPress={() => onSelectItem && onSelectItem(item.id)}
             activeOpacity={0.8}
           >
             {item.imageUri ? (

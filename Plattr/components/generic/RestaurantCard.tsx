@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Modal, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Modal, Animated, Platform } from 'react-native';
 import { Star, MapPin } from 'lucide-react-native';
 import Tag from '../explore/Tag';
 import { Ionicons } from '@expo/vector-icons';
@@ -68,46 +68,59 @@ const RestaurantCard: React.FC<RestaurantProps> = ({ restaurant, onPress }) => {
 
   return (
     <>
-      <TouchableOpacity style={styles.container} onPress={handlePress}>
+      <TouchableOpacity 
+        style={styles.container} 
+        onPress={handlePress}
+        activeOpacity={0.96}
+      >
         <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: restaurant.imageUrl }}
-            style={styles.logo}
-            resizeMode="contain"
-            onLoadStart={() => setIsLoading(true)}
-            onLoadEnd={() => setIsLoading(false)}
-            onError={() => setHasError(true)}
-          />
-          {isLoading && (
+          {!hasError ? (
+            <Image
+              source={{ uri: restaurant.imageUrl }}
+              style={styles.logo}
+              resizeMode="cover"
+              onLoadStart={() => setIsLoading(true)}
+              onLoadEnd={() => setIsLoading(false)}
+              onError={() => setHasError(true)}
+            />
+          ) : null}
+          
+          {isLoading && !hasError && (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#333" />
+              <ActivityIndicator size="small" color="#8E8E93" />
             </View>
           )}
+          
           {hasError && (
             <View style={styles.errorContainer}>
-              <Ionicons name="image-outline" size={32} color="#666" />
+              <Ionicons name="image-outline" size={32} color="#8E8E93" />
               <Text style={styles.errorText}>Image unavailable</Text>
             </View>
           )}
         </View>
-        <Text style={styles.name}>{restaurant.name}</Text>
         
-        <View style={styles.tagsContainer}>
-          {restaurant.tags.map((tag, index) => (
-            <Tag key={index} text={tag.text} variant={tag.variant} />
-          ))}
-        </View>
-
-        <View style={styles.footer}>
-          <View style={styles.ratingContainer}>
-            <Star size={16} color="#FFB800" />
-            <Text style={styles.ratingText}>
-              {restaurant.rating} ({restaurant.reviews})
-            </Text>
+        <View style={styles.contentContainer}>
+          <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+            {restaurant.name}
+          </Text>
+          
+          <View style={styles.tagsContainer}>
+            {restaurant.tags.map((tag, index) => (
+              <Tag key={index} text={tag.text} variant={tag.variant} />
+            ))}
           </View>
-          <View style={styles.distanceContainer}>
-            <MapPin size={14} color="#666" />
-            <Text style={styles.distanceText}>{restaurant.distance}</Text>
+
+          <View style={styles.footer}>
+            <View style={styles.ratingContainer}>
+              <Star size={14} color="#FFB800" />
+              <Text style={styles.ratingText}>
+                <Text style={styles.ratingNumber}>{restaurant.rating}</Text> ({restaurant.reviews})
+              </Text>
+            </View>
+            <View style={styles.distanceContainer}>
+              <MapPin size={14} color="#8E8E93" />
+              <Text style={styles.distanceText}>{restaurant.distance}</Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -159,71 +172,87 @@ const styles = StyleSheet.create({
   container: {
     width: 280,
     backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: 16,
+    overflow: 'hidden',
     marginTop: 5,
     marginLeft: 1,
     marginRight: 12,
     marginBottom: 5,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 2
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 3,
+      }
+    })
   },
   imageContainer: {
     position: 'relative',
     height: 150,
     width: '100%',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    marginBottom: 12,
-    overflow: 'hidden',
+    backgroundColor: '#F2F2F7',
   },
   loadingContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F2F2F7',
   },
   errorContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F2F2F7',
   },
   errorText: {
-    color: '#666',
+    color: '#8E8E93',
     marginTop: 8,
+    fontSize: 14,
+    fontWeight: '500',
+    letterSpacing: -0.2,
+  },
+  contentContainer: {
+    padding: 16,
   },
   name: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8
+    marginBottom: 8,
+    color: '#1C1C1E',
+    letterSpacing: -0.4,
   },
   logo: {
     width: "100%",
     height: 150,
-    borderRadius: 8,
   },
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 4,
-    marginBottom: 8
+    gap: 6,
+    marginBottom: 10
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 2,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center'
   },
+  ratingNumber: {
+    fontWeight: '500',
+    color: '#1C1C1E',
+  },
   ratingText: {
     marginLeft: 4,
-    color: '#666'
+    color: '#8E8E93',
+    fontSize: 14,
   },
   distanceContainer: {
     flexDirection: 'row',
@@ -231,7 +260,8 @@ const styles = StyleSheet.create({
   },
   distanceText: {
     marginLeft: 4,
-    color: '#666'
+    color: '#8E8E93',
+    fontSize: 14,
   },
   modalContainer: {
     flex: 1,
@@ -242,7 +272,7 @@ const styles = StyleSheet.create({
   dealModalOverlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
-    backgroundColor: 'transparent', // Important: makes the overlay itself transparent
+    backgroundColor: 'transparent',
   }
 });
 

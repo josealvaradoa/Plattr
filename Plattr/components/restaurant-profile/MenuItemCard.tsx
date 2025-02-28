@@ -1,20 +1,27 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MenuItemProps } from './types';
 import TagPill from './TagPill';
 
 const MenuItemCard: React.FC<MenuItemProps> = ({ item }) => {
+  const hasImage = !!item.imageUri;
+  
   return (
     <View style={styles.menuItem}>
-      <View style={styles.menuItemContent}>
+      <View style={[
+        styles.menuItemContent,
+        !hasImage && styles.menuItemContentFull
+      ]}>
         <View style={styles.menuItemHeader}>
-          <Text style={styles.menuItemName}>
-            {item.name}
+          <View style={styles.nameContainer}>
+            <Text style={styles.menuItemName}>{item.name}</Text>
             {item.popular && (
-              <Text style={styles.popularBadge}> • Popular</Text>
+              <View style={styles.popularContainer}>
+                <Text style={styles.popularBadge}>• Popular</Text>
+              </View>
             )}
-          </Text>
+          </View>
           <Text style={styles.menuItemPrice}>{item.price}</Text>
         </View>
         
@@ -31,17 +38,15 @@ const MenuItemCard: React.FC<MenuItemProps> = ({ item }) => {
         )}
       </View>
       
-      {item.imageUri ? (
-        <Image 
-          source={{ uri: item.imageUri }} 
-          style={styles.menuItemImage}
-          resizeMode="cover"
-        />
-      ) : (
-        <View style={styles.menuItemPlaceholder}>
-          <Ionicons name="restaurant-outline" size={24} color="#CCC" />
+      {hasImage ? (
+        <View style={styles.imageContainer}>
+          <Image 
+            source={{ uri: item.imageUri }} 
+            style={styles.menuItemImage}
+            resizeMode="cover"
+          />
         </View>
-      )}
+      ) : null}
     </View>
   );
 };
@@ -49,65 +54,97 @@ const MenuItemCard: React.FC<MenuItemProps> = ({ item }) => {
 const styles = StyleSheet.create({
   menuItem: {
     flexDirection: 'row',
-    marginBottom: 16,
+    marginVertical: 8,
+    marginHorizontal: 0,
     backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    borderRadius: 12,
+    padding: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   menuItemContent: {
     flex: 1,
-    marginRight: 12,
+    marginRight: 16,
+    justifyContent: 'space-between',
+  },
+  menuItemContentFull: {
+    marginRight: 0,
   },
   menuItemHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 4,
+    marginBottom: 8,
+  },
+  nameContainer: {
+    flex: 1,
+    marginRight: 12,
   },
   menuItemName: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
-    color: '#333',
-    flex: 1,
-    marginRight: 8,
+    color: '#000000',
+    letterSpacing: -0.4,
+    marginBottom: 2,
+  },
+  popularContainer: {
+    marginTop: 2,
   },
   popularBadge: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#FF5A5F',
-    fontWeight: '400',
-  },
-  menuItemPrice: {
-    fontSize: 16,
-    color: '#666',
     fontWeight: '500',
   },
+  menuItemPrice: {
+    fontSize: 17,
+    color: '#000000',
+    fontWeight: '600',
+  },
   menuItemDescription: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
+    fontSize: 15,
+    color: '#666666',
+    marginBottom: 10,
     lineHeight: 20,
+    letterSpacing: -0.24,
+  },
+  imageContainer: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
   },
   menuItemImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 6,
+    width: 90,
+    height: 90,
+    borderRadius: 10,
   },
   menuItemPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 6,
-    backgroundColor: '#F5F5F5',
+    width: 90,
+    height: 90,
+    borderRadius: 10,
+    backgroundColor: '#F5F5F7',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dietaryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginTop: 4,
   },
 });
 

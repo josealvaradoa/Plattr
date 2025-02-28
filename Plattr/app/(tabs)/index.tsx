@@ -23,7 +23,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: 'white' }}>
+    <ScrollView style={{ backgroundColor: '#F2F2F7' }}>
       {processedDeals.map(deal => (
         <DealCard
           key={deal.id}

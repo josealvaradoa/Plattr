@@ -1,13 +1,13 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { RestaurantDealCardProps } from './types';
 import { DealType } from '../../types/deals';
 
 /**
- * ProfileDealCard Component (v2.0)
- * Displays deal information within a restaurant's profile
+ * ProfileDealCard Component (v3.0)
+ * Displays deal information within a restaurant's profile with enhanced Apple-like design
  */
 const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({ 
   deal, 
@@ -15,6 +15,7 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
   onSave,
   onViewDeal
 }) => {
+  const [termsExpanded, setTermsExpanded] = useState(false);
   const isExpired = deal.expirationDate ? new Date(deal.expirationDate) < new Date() : false;
   const timeLeft = getTimeLeft(deal.expirationDate);
   
@@ -58,6 +59,12 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
     });
   };
 
+  // Calculate redemption percentage for progress bar
+  const getRedemptionPercentage = () => {
+    if (!deal.maxRedemptions || deal.remainingRedemptions === undefined) return 0;
+    return (deal.remainingRedemptions / deal.maxRedemptions) * 100;
+  };
+
   return (
     <Animated.View 
       style={[styles.container, isExpired && styles.expiredOverlay]}
@@ -75,7 +82,7 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
             <Ionicons
               name={isSaved ? "heart" : "heart-outline"}
               size={24}
-              color={isSaved ? "#FF0000" : "#666"}
+              color={isSaved ? "#FF3B30" : "#8E8E93"}
             />
           </TouchableOpacity>
         )}
@@ -85,20 +92,37 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
         
         {deal.terms && deal.terms.length > 0 && (
           <View style={styles.termsContainer}>
-            <Text style={styles.termsTitle}>Terms & Conditions:</Text>
-            {deal.terms.map((term, index) => (
-              <View key={index} style={styles.termItem}>
-                <View style={styles.bulletPoint} />
-                <Text style={styles.termText}>{term}</Text>
+            <TouchableOpacity 
+              style={styles.termsHeader}
+              onPress={() => setTermsExpanded(!termsExpanded)}
+              accessibilityRole="button"
+              accessibilityLabel={termsExpanded ? "Collapse terms and conditions" : "Expand terms and conditions"}
+            >
+              <Text style={styles.termsTitle}>Terms & Conditions</Text>
+              <Ionicons 
+                name={termsExpanded ? "chevron-up" : "chevron-down"} 
+                size={18} 
+                color="#8E8E93" 
+              />
+            </TouchableOpacity>
+            
+            {termsExpanded && (
+              <View style={styles.termsContent}>
+                {deal.terms.map((term, index) => (
+                  <View key={index} style={styles.termItem}>
+                    <Text style={styles.bulletPoint}>•</Text>
+                    <Text style={styles.termText}>{term}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
+            )}
           </View>
         )}
         
         <View style={styles.redemptionInfo}>
           {deal.expirationDate && (
             <View style={styles.infoItem}>
-              <Ionicons name="calendar-outline" size={16} color="#666" />
+              <Ionicons name="calendar-outline" size={16} color="#8E8E93" />
               <Text style={styles.infoText}>
                 {isExpired ? 'Expired on: ' : 'Valid until: '} 
                 {formatDate(deal.expirationDate)}
@@ -106,14 +130,23 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
             </View>
           )}
           
-          {deal.maxRedemptions && (
-            <View style={styles.infoItem}>
-              <Ionicons name="repeat-outline" size={16} color="#666" />
-              <Text style={styles.infoText}>
-                {deal.remainingRedemptions !== undefined 
-                  ? `${deal.remainingRedemptions} of ${deal.maxRedemptions} redemptions left`
-                  : `${deal.maxRedemptions} max redemptions`}
-              </Text>
+          {deal.maxRedemptions && deal.remainingRedemptions !== undefined && (
+            <View>
+              <View style={styles.infoItem}>
+                <Ionicons name="repeat-outline" size={16} color="#8E8E93" />
+                <Text style={styles.infoText}>
+                  {`${deal.remainingRedemptions} of ${deal.maxRedemptions} redemptions left`}
+                </Text>
+              </View>
+              
+              <View style={styles.progressBarContainer}>
+                <View 
+                  style={[
+                    styles.progressBarFill, 
+                    { width: `${getRedemptionPercentage()}%` }
+                  ]} 
+                />
+              </View>
             </View>
           )}
         </View>
@@ -128,6 +161,15 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
           accessibilityLabel={isExpired ? "Deal expired" : "View deal details"}
           accessibilityRole="button"
         >
+          <Ionicons 
+            name={
+              isExpired ? "time-outline" : 
+              deal.dealType === DealType.REDEEMABLE ? "ticket-outline" : "information-circle-outline"
+            } 
+            size={20} 
+            color="white" 
+            style={styles.buttonIcon}
+          />
           <Text style={styles.viewDealText}>
             {isExpired ? 'Expired' : deal.dealType === DealType.REDEEMABLE ? 'Redeem Deal' : 'View Details'}
           </Text>
@@ -141,78 +183,110 @@ const styles = StyleSheet.create({
   container: {
     margin: 16,
     backgroundColor: 'white',
-    borderRadius: 12,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 2
+    borderRadius: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      }
+    })
   },
   contentWrapper: {
-    padding: 16,
+    padding: 20,
     position: 'relative',
   },
   expiredOverlay: {
-    opacity: 0.6,
-    backgroundColor: 'rgba(243, 244, 246, 0.8)',
+    opacity: 0.7,
+    backgroundColor: 'rgba(250, 250, 250, 0.8)',
   },
   activeHeartButton: {
-    backgroundColor: 'rgba(255, 0, 0, 0.3)',
+    backgroundColor: 'rgba(255, 59, 48, 0.12)',
   },
   heartButton: {
     position: 'absolute',
-    top: 12,
-    right: 12,
+    top: 16,
+    right: 16,
     zIndex: 1,
     backgroundColor: 'rgba(240, 240, 240, 0.8)',
-    borderRadius: 20,
-    padding: 4,
+    borderRadius: 28,
+    width: 38,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 1,
+      }
+    })
   },
   dealTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
     marginBottom: 8,
     marginTop: 4,
-    color: '#333',
+    color: '#1C1C1E',
+    letterSpacing: -0.4,
   },
   dealDetails: {
-    fontSize: 16,
+    fontSize: 17,
     lineHeight: 22,
-    marginBottom: 16,
-    color: '#444',
+    marginBottom: 20,
+    color: '#3A3A3C',
+    letterSpacing: -0.4,
   },
   termsContainer: {
-    marginBottom: 16,
-    backgroundColor: '#f9f9f9',
-    padding: 12,
-    borderRadius: 8,
+    marginBottom: 20,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  termsHeader: {
+    padding: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   termsTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
-    marginBottom: 8,
-    color: '#333',
+    color: '#1C1C1E',
+    letterSpacing: -0.4,
+  },
+  termsContent: {
+    padding: 14,
+    paddingTop: 0,
   },
   termItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 6,
+    marginBottom: 10,
   },
   bulletPoint: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#666',
-    marginTop: 8,
+    fontSize: 14,
+    color: '#8E8E93',
     marginRight: 8,
+    marginTop: -2,
   },
   termText: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: 15,
+    color: '#3A3A3C',
     flex: 1,
+    letterSpacing: -0.24,
+    lineHeight: 20,
   },
   redemptionInfo: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   infoItem: {
     flexDirection: 'row',
@@ -221,19 +295,50 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginLeft: 8,
-    fontSize: 14,
-    color: '#666',
+    fontSize: 15,
+    color: '#636366',
+    letterSpacing: -0.24,
+  },
+  progressBarContainer: {
+    height: 4,
+    backgroundColor: '#E5E5EA',
+    borderRadius: 2,
+    marginTop: 8,
+    marginBottom: 8,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#4dbf4d',
+    borderRadius: 2,
   },
   viewDealButton: {
-    padding: 12,
-    borderRadius: 8,
+    padding: 16,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
+      }
+    })
+  },
+  buttonIcon: {
+    marginRight: 8,
   },
   viewDealText: {
     color: 'white',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 17,
+    letterSpacing: -0.4,
   }
 });
 
