@@ -1,22 +1,5 @@
 // types.ts
 import { DealType, DealCardProps } from '../../types/deals';
-import { RestaurantData } from '../../types/restaurant';
-export interface RestaurantDeal {
-  id: string;
-  title: string;
-  description: string;
-  discountType: 'percentage' | 'fixedAmount' | 'bogo';
-  discountValue: number;
-  validDays: string[];
-  validHours: { start: string; end: string };
-  tags: string[];
-  dealType: DealType;
-  expirationDate?: string;
-  terms?: string[];
-  isRedeemed?: boolean;
-  redemptionCode?: string;
-  happeningNow?: boolean;
-}
 
 export interface MenuItem {
   id: string;

@@ -38,9 +38,9 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
   const getButtonColor = (dealType: DealType, isExpired: boolean) => {
     if (isExpired) return "#9CA3AF";
     switch (dealType) {
-      case "redeemable":
+      case DealType.REDEEMABLE:
         return "#4dbf4d";
-      case "informational":
+      case DealType.INFORMATIONAL:
         return "#3a92fc";
       default:
         return "#5e5e5e";
@@ -63,14 +63,7 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
       style={[styles.container, isExpired && styles.expiredOverlay]}
       entering={FadeIn}
     >
-      <View style={styles.contentWrapper}>
-        {!isExpired && deal.dealType === "redeemable" && (
-          <View style={styles.timeLeftBadge}>
-            <Ionicons name="hourglass-outline" size={16} color="white" />
-            <Text style={styles.timeLeftText}>{timeLeft}</Text>
-          </View>
-        )}
-        
+      <View style={styles.contentWrapper}>        
         {!isExpired && (
           <TouchableOpacity
             style={[styles.heartButton, isSaved && styles.activeHeartButton]}
@@ -136,7 +129,7 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
           accessibilityRole="button"
         >
           <Text style={styles.viewDealText}>
-            {isExpired ? 'Expired' : deal.dealType === "redeemable" ? 'Redeem Deal' : 'View Details'}
+            {isExpired ? 'Expired' : deal.dealType === DealType.REDEEMABLE ? 'Redeem Deal' : 'View Details'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -174,24 +167,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(240, 240, 240, 0.8)',
     borderRadius: 20,
     padding: 4,
-  },
-  timeLeftBadge: {
-    position: 'absolute',
-    top: 12,
-    left: 12,
-    backgroundColor: 'rgba(255, 0, 0, 0.8)',
-    padding: 3,
-    borderRadius: 4,
-    zIndex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  timeLeftText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
-    marginLeft: 4,
-    marginRight: 4,
   },
   dealTitle: {
     fontSize: 20,

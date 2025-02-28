@@ -1,8 +1,42 @@
 // mock/restaurantData.ts
-import { RestaurantData, RestaurantTag } from '../types/restaurant';
+import { RestaurantTag } from '../types/restaurant';
 import { DealCardProps, DealType } from '../types/deals';
 
 // Extended restaurant type that includes all necessary fields for the profile card
+export interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  imageUri?: string;
+  category: string;
+  popular?: boolean;
+  dietaryInfo?: string[];  // e.g., "Vegetarian", "Gluten-Free", "Vegan"
+}
+
+export interface RestaurantData {
+  id: string; 
+  name: string;
+  tags: RestaurantTag[];
+  rating: string;
+  reviews: string;
+  distance: string;
+  imageUrl: string;
+  location?: string;
+  description?: string;
+  cuisine?: string[];
+  priceLevel?: number;
+  hours?: {
+    [key: string]: { open: string; close: string };
+  };
+  phoneNumber?: string;
+  website?: string;
+  deals: DealCardProps[];
+  menu?: {
+    categories: string[];
+    items: MenuItem[];
+  };
+}
 
 export const trendingRestaurants: RestaurantData[] = [
   {
@@ -45,9 +79,9 @@ export const trendingRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1617499764932-8a56f915e1dd?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "fixedAmount" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: true,
-        contactInfo: {
+        contactInfo: {  
           phone: "(804) 555-1234",
           address: "3158 W Cary St, Richmond, VA 23221"
         },
@@ -69,7 +103,7 @@ export const trendingRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1617499764932-8a56f915e1dd?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "percentage" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: false,
         contactInfo: {
           phone: "(804) 555-1234",
@@ -81,7 +115,60 @@ export const trendingRestaurants: RestaurantData[] = [
         terms: ["Valid Monday-Friday, 4-7PM", "Must be 21+ for alcoholic beverages", "Limit 2 per customer"],
         isRedeemed: false
       }
-    ]
+    ],
+    menu: {
+      categories: ["Tacos", "Entrees", "Drinks", "Desserts"],
+      items: [
+        {
+          id: "cochiloco-item1",
+          name: "Carne Asada Tacos",
+          description: "Three street-style tacos with marinated grilled steak, onions, cilantro, and lime on handmade corn tortillas.",
+          price: "$12.99",
+          imageUri: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=1000",
+          category: "Tacos",
+          popular: true,
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "cochiloco-item2",
+          name: "Enchiladas Verdes",
+          description: "Two corn tortillas stuffed with shredded chicken, topped with verde sauce, queso fresco, and Mexican crema. Served with rice and beans.",
+          price: "$15.99",
+          imageUri: "https://images.unsplash.com/photo-1534352956036-cd81e27dd615?q=80&w=1000",
+          category: "Entrees",
+          popular: false,
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "cochiloco-item3",
+          name: "House Margarita",
+          description: "Our signature margarita made with silver tequila, fresh lime juice, and agave nectar. Available frozen or on the rocks.",
+          price: "$9.99",
+          imageUri: "https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?q=80&w=1000",
+          category: "Drinks",
+          popular: true
+        },
+        {
+          id: "cochiloco-item4",
+          name: "Vegetarian Burrito Bowl",
+          description: "Cilantro-lime rice topped with black beans, roasted vegetables, guacamole, pico de gallo, and chipotle crema.",
+          price: "$13.99",
+          imageUri: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000",
+          category: "Entrees",
+          dietaryInfo: ["Vegetarian", "Gluten-Free"]
+        },
+        {
+          id: "cochiloco-item5",
+          name: "Churros con Chocolate",
+          description: "Crispy cinnamon-sugar coated churros served with warm chocolate dipping sauce.",
+          price: "$7.99",
+          imageUri: "https://images.unsplash.com/photo-1624471448836-b95e31aff1c0?q=80&w=1000",
+          category: "Desserts",
+          popular: true,
+          dietaryInfo: ["Vegetarian"]
+        }
+      ]
+    }
   },
   {
     id: "pinkys-richmond",
@@ -123,7 +210,7 @@ export const trendingRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "fixedAmount" as DealType,
+        dealType: DealType.INFORMATIONAL,
         happeningNow: false,
         contactInfo: {
           phone: "(804) 555-7890",
@@ -147,7 +234,7 @@ export const trendingRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "fixedAmount" as DealType,
+        dealType: DealType.INFORMATIONAL,
         happeningNow: true,
         contactInfo: {
           phone: "(804) 555-7890",
@@ -159,7 +246,58 @@ export const trendingRestaurants: RestaurantData[] = [
         terms: ["Valid Wednesdays, 4PM-9PM", "One deal per customer", "Dine-in only"],
         isRedeemed: false
       }
-    ]
+    ],
+    menu: {
+      categories: ["Burgers", "Sides", "Brunch", "Drinks", "Entrees"],
+      items: [
+        {
+          id: "pinkys-item1",
+          name: "The Pinky Burger",
+          description: "House specialty 8oz grass-fed beef patty with aged cheddar, caramelized onions, house-made pickles, and signature sauce on a toasted brioche bun. Served with hand-cut fries.",
+          price: "$16.99",
+          imageUri: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1000",
+          category: "Burgers",
+          popular: true
+        },
+        {
+          id: "pinkys-item2",
+          name: "Truffle Mac & Cheese",
+          description: "Cavatappi pasta in a creamy four-cheese sauce with black truffle oil and toasted breadcrumbs.",
+          price: "$14.99",
+          imageUri: "https://images.unsplash.com/photo-1612874742237-6526221588e3?q=80&w=1000",
+          category: "Sides",
+          popular: true,
+          dietaryInfo: ["Vegetarian"]
+        },
+        {
+          id: "pinkys-item3",
+          name: "Avocado Toast",
+          description: "Artisanal sourdough toast topped with smashed avocado, heirloom tomatoes, microgreens, and a poached egg. Served with mixed greens.",
+          price: "$13.99",
+          imageUri: "https://images.unsplash.com/photo-1603046891744-76139d394ec6?q=80&w=1000",
+          category: "Brunch",
+          dietaryInfo: ["Vegetarian"]
+        },
+        {
+          id: "pinkys-item4",
+          name: "Bourbon Old Fashioned",
+          description: "Small-batch bourbon with house-made bitters, sugar, and orange peel. Served over a large ice cube.",
+          price: "$12.99",
+          imageUri: "https://images.unsplash.com/photo-1582056509382-2e0e5dc1aec9?q=80&w=1000",
+          category: "Drinks",
+          popular: false
+        },
+        {
+          id: "pinkys-item5",
+          name: "Quinoa Power Bowl",
+          description: "Tri-color quinoa with roasted seasonal vegetables, kale, chickpeas, avocado, and lemon-tahini dressing.",
+          price: "$15.99",
+          imageUri: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1000",
+          category: "Entrees",
+          dietaryInfo: ["Vegan", "Gluten-Free"]
+        }
+      ]
+    }
   },
   {
     id: "thai-lotus-fan",
@@ -200,7 +338,7 @@ export const trendingRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1559847844-5315695dadae?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "percentage" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: true,
         contactInfo: {
           phone: "(804) 555-4321",
@@ -224,7 +362,7 @@ export const trendingRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1559847844-5315695dadae?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "fixedAmount" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: false,
         contactInfo: {
           phone: "(804) 555-4321",
@@ -236,7 +374,60 @@ export const trendingRestaurants: RestaurantData[] = [
         terms: ["Valid Sundays, 4PM-9PM", "Dine-in or takeout", "Family pack serves 4-5 people"],
         isRedeemed: false
       }
-    ]
+    ],
+    menu: {
+      categories: ["Noodles", "Curry", "Desserts", "Soups", "Drinks"],
+      items: [
+        {
+          id: "thai-lotus-item1",
+          name: "Pad Thai",
+          description: "Rice noodles stir-fried with eggs, bean sprouts, green onions, and your choice of protein in our signature tamarind sauce. Topped with crushed peanuts and lime.",
+          price: "$14.99",
+          imageUri: "https://images.unsplash.com/photo-1559314809-0d155014e29e?q=80&w=1000",
+          category: "Noodles",
+          popular: true,
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "thai-lotus-item2",
+          name: "Green Curry",
+          description: "Aromatic green curry with bamboo shoots, bell peppers, Thai basil, and your choice of protein. Served with jasmine rice.",
+          price: "$15.99",
+          imageUri: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?q=80&w=1000",
+          category: "Curry",
+          popular: true,
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "thai-lotus-item3",
+          name: "Mango Sticky Rice",
+          description: "Sweet coconut sticky rice topped with fresh mango slices and toasted sesame seeds. A traditional Thai dessert.",
+          price: "$7.99",
+          imageUri: "https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1000",
+          category: "Desserts",
+          dietaryInfo: ["Vegetarian", "Gluten-Free"]
+        },
+        {
+          id: "thai-lotus-item4",
+          name: "Tom Yum Soup",
+          description: "Hot and sour lemongrass soup with mushrooms, tomatoes, and your choice of protein. Flavored with lime juice, galangal, and Thai chili.",
+          price: "$6.99",
+          imageUri: "https://images.unsplash.com/photo-1548943487-a2e4e43b4853?q=80&w=1000",
+          category: "Soups",
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "thai-lotus-item5",
+          name: "Thai Iced Tea",
+          description: "Sweetened Thai tea topped with condensed milk. A refreshing complement to spicy dishes.",
+          price: "$3.99",
+          imageUri: "https://images.unsplash.com/photo-1563803835717-b6aeba7201d6?q=80&w=1000",
+          category: "Drinks",
+          popular: false,
+          dietaryInfo: ["Vegetarian"]
+        }
+      ]
+    }
   }
 ];
 
@@ -280,7 +471,7 @@ export const dareToTryRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "percentage" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: true,
         contactInfo: {
           phone: "(804) 555-9876",
@@ -304,7 +495,7 @@ export const dareToTryRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "fixedAmount" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: false,
         contactInfo: {
           phone: "(804) 555-9876",
@@ -316,7 +507,60 @@ export const dareToTryRestaurants: RestaurantData[] = [
         terms: ["Valid Sundays, 11AM-3PM", "Limit 2 drinks per person", "Must purchase brunch entree"],
         isRedeemed: false
       }
-    ]
+    ],
+    menu: {
+      categories: ["Raw Bar", "Entrees", "Drinks", "Desserts"],
+      items: [
+        {
+          id: "lulus-item1",
+          name: "East Coast Oysters",
+          description: "Half dozen fresh local oysters served on ice with mignonette, cocktail sauce, and lemon.",
+          price: "$18.99",
+          imageUri: "https://images.unsplash.com/photo-1565895405138-6c3a1555da6a?q=80&w=1000",
+          category: "Raw Bar",
+          popular: true,
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "lulus-item2",
+          name: "Shrimp & Grits",
+          description: "Creamy stone-ground grits topped with sautéed Gulf shrimp, andouille sausage, bell peppers, and a Cajun cream sauce.",
+          price: "$24.99",
+          imageUri: "https://images.unsplash.com/photo-1501427724955-1a31e60c3be3?q=80&w=1000",
+          category: "Entrees",
+          popular: true,
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "lulus-item3",
+          name: "Seafood Boil",
+          description: "Low country boil with snow crab legs, shrimp, andouille sausage, corn on the cob, and red potatoes. Served with drawn butter and Old Bay seasoning.",
+          price: "$34.99",
+          imageUri: "https://images.unsplash.com/photo-1466553369110-0330960efe97?q=80&w=1000",
+          category: "Entrees",
+          popular: false,
+          dietaryInfo: ["Gluten-Free"]
+        },
+        {
+          id: "lulus-item4",
+          name: "Bourbon Peach Smash",
+          description: "Small-batch Virginia bourbon with muddled fresh peaches, mint, lemon juice, and simple syrup. Served over crushed ice.",
+          price: "$13.99",
+          imageUri: "https://images.unsplash.com/photo-1541546006121-5c3bc5e8c7b9?q=80&w=1000",
+          category: "Drinks",
+          popular: true
+        },
+        {
+          id: "lulus-item5",
+          name: "Southern Banana Pudding",
+          description: "Homemade vanilla pudding layered with fresh bananas, vanilla wafers, and topped with whipped cream and a caramel drizzle.",
+          price: "$8.99",
+          imageUri: "https://images.unsplash.com/photo-1625944230945-1b7dd3b949ab?q=80&w=1000",
+          category: "Desserts",
+          dietaryInfo: ["Vegetarian"]
+        }
+      ]
+    }
   },
   {
     id: "perlys-richmond",
@@ -357,7 +601,7 @@ export const dareToTryRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1562059390-a761a084768e?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "percentage" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: true,
         contactInfo: {
           phone: "(804) 555-3579",
@@ -381,7 +625,7 @@ export const dareToTryRestaurants: RestaurantData[] = [
         imageUrl: "https://images.unsplash.com/photo-1562059390-a761a084768e?q=80&w=1000",
         onPress: () => {},
         onViewDeal: () => {},
-        dealType: "fixedAmount" as DealType,
+        dealType: DealType.REDEEMABLE,
         happeningNow: false,
         contactInfo: {
           phone: "(804) 555-3579",
@@ -394,6 +638,58 @@ export const dareToTryRestaurants: RestaurantData[] = [
         isRedeemed: false,
         redemptionCode: "LUNCH10"
       }
-    ]
+    ],
+    menu: {
+      categories: ["Sandwiches", "Soups", "Breakfast", "Sides"],
+      items: [
+        {
+          id: "perlys-item1",
+          name: "The Reuben",
+          description: "House-cured corned beef piled high with sauerkraut, Swiss cheese, and Russian dressing on grilled rye bread. Served with a pickle spear and potato salad.",
+          price: "$15.99",
+          imageUri: "https://images.unsplash.com/photo-1588174555774-8592a8a3bc41?q=80&w=1000",
+          category: "Sandwiches",
+          popular: true
+        },
+        {
+          id: "perlys-item2",
+          name: "Matzo Ball Soup",
+          description: "Classic chicken soup with vegetables, fresh herbs, and a fluffy matzo ball. Served with a slice of challah bread.",
+          price: "$6.99",
+          imageUri: "https://images.unsplash.com/photo-1605748430168-38f8bd906901?q=80&w=1000",
+          category: "Soups",
+          popular: true,
+          dietaryInfo: ["Dairy-Free"]
+        },
+        {
+          id: "perlys-item3",
+          name: "Challah French Toast",
+          description: "Thick slices of house-made challah bread dipped in cinnamon-vanilla batter and grilled to perfection. Served with maple syrup and fresh berries.",
+          price: "$13.99",
+          imageUri: "https://images.unsplash.com/photo-1484723091739-30a097e8f929?q=80&w=1000",
+          category: "Breakfast",
+          popular: true,
+          dietaryInfo: ["Vegetarian"]
+        },
+        {
+          id: "perlys-item4",
+          name: "Potato Latkes",
+          description: "Crispy potato pancakes served with apple sauce and sour cream.",
+          price: "$9.99",
+          imageUri: "https://images.unsplash.com/photo-1545489379-033a9bf91857?q=80&w=1000",
+          category: "Sides",
+          dietaryInfo: ["Vegetarian"]
+        },
+        {
+          id: "perlys-item5",
+          name: "Smoked Salmon Plate",
+          description: "House-smoked Nova salmon served with cream cheese, capers, red onions, tomatoes, and your choice of bagel.",
+          price: "$16.99",
+          imageUri: "https://images.unsplash.com/photo-1485963631004-f2f00b1d6606?q=80&w=1000",
+          category: "Breakfast",
+          popular: false
+        }
+      ]
+    }
   }
 ];

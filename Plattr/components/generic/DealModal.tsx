@@ -232,13 +232,6 @@ const DealModal: React.FC<DealModalProps> = ({
           <View {...panResponder.panHandlers}>
             <View style={styles.handleBar} />
             <View style={styles.header}>
-              <TouchableOpacity 
-                onPress={onClose}
-                style={styles.backButton}
-              >
-                <Ionicons name="chevron-back" size={24} color="#007AFF" />
-                <Text style={styles.backText}>Back to Deals</Text>
-              </TouchableOpacity>
             </View>
           </View>
           
@@ -302,7 +295,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingHorizontal: 16,
     paddingBottom: Platform.OS === 'ios' ? 40 : 24,
-    maxHeight: '80%', // Limit height to 80% of screen
+    maxHeight: '100%', // Limit height to 80% of screen
     ...Platform.select({
       ios: {
         shadowColor: '#000',

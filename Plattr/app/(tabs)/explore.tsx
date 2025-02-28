@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { MapPin } from 'lucide-react-native';
 import RestaurantCard from '../../components/generic/RestaurantCard';
-import { trendingRestaurants } from '../../data/restaurantData';
+import { dareToTryRestaurants, trendingRestaurants } from '../../data/restaurantData';
 import { Ionicons } from '@expo/vector-icons';
 
 const categories = [
@@ -70,7 +70,7 @@ const ExplorePage = () => (
         showsHorizontalScrollIndicator={false}
         style={styles.restaurantScroll}
       >
-        {trendingRestaurants.map((restaurant, index) => (
+        {dareToTryRestaurants.map((restaurant, index) => (
           <RestaurantCard key={index} restaurant={restaurant} />
         ))}
       </ScrollView>

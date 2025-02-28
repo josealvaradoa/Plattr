@@ -36,6 +36,7 @@ export default function HomeScreen() {
           visible={isModalVisible}
           onClose={() => setIsModalVisible(false)}
           deal={selectedDeal}
+          isEmbedded={false}
         />
       )}
     </ScrollView>
