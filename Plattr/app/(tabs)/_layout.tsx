@@ -18,7 +18,7 @@ export default function TabsLayout() {
     router.push('/profile');
   };
 
-  const shouldShowSearch = !['wallet', 'profile', 'explore'].includes(pathname.replace('/', ''));
+  const shouldShowSearch = !['wallet', 'profile', ''].includes(pathname.replace('/', ''));
 
   // Decide what to display as location
   let displayLocation = 'Loading...';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet, Platform } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet, Platform, ImageSourcePropType } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { DealCardProps, DealType } from '../../types/deals';
 import { Star } from 'lucide-react-native';
@@ -68,6 +68,12 @@ export const DealCard: React.FC<DealCardProps> = ({
         }
     };
 
+    // Determine if imageUrl is a remote URL or a local resource
+    const isRemoteImage = typeof imageUrl === 'string';
+    const imageSource: ImageSourcePropType = isRemoteImage 
+        ? { uri: imageUrl as string } 
+        : imageUrl as ImageSourcePropType;
+
     return (
         <View style={styles.container}>
             <TouchableOpacity 
@@ -104,7 +110,7 @@ export const DealCard: React.FC<DealCardProps> = ({
                     
                     {!hasError ? (
                         <Image
-                            source={{ uri: imageUrl }}
+                            source={imageSource}
                             style={styles.logo}
                             resizeMode="cover"
                             onLoadStart={() => setIsLoading(true)}
@@ -135,7 +141,7 @@ export const DealCard: React.FC<DealCardProps> = ({
                     <View style={styles.ratingContainer}>
                         <Star size={14} color="#FFB800" />
                         <Text style={styles.ratingText}>
-                            {rating} <Text style={styles.ratingDescription}>{ratingMap[rating]}</Text> <Text style={styles.reviewCount}>({reviewCount}K)</Text>
+                            {rating} <Text style={styles.ratingDescription}>{ratingMap[rating]}</Text> <Text style={styles.reviewCount}>({reviewCount})</Text>
                         </Text>
                     </View>
 

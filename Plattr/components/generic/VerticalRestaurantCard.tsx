@@ -8,12 +8,12 @@ import { RestaurantData } from '../../types/restaurant';
 import DealModal from '../generic/DealModal';
 import { DealCardProps } from '../../types/deals';
 
-interface RestaurantProps {
+interface VerticalRestaurantCardProps {
   restaurant: RestaurantData;
   onPress?: (restaurantId: string) => void;
 }
 
-const RestaurantCard: React.FC<RestaurantProps> = ({ restaurant, onPress }) => {
+const VerticalRestaurantCard: React.FC<VerticalRestaurantCardProps> = ({ restaurant, onPress }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [profileVisible, setProfileVisible] = useState(false);
@@ -96,52 +96,55 @@ const RestaurantCard: React.FC<RestaurantProps> = ({ restaurant, onPress }) => {
         onPress={handlePress}
         activeOpacity={0.96}
       >
+        {/* Restaurant Image */}
         <View style={styles.imageContainer}>
-          {!hasError ? (
+          {!hasError && (
             <Image
               source={getImageSource()}
-              style={styles.logo}
+              style={styles.image}
               resizeMode="cover"
               onLoadStart={() => setIsLoading(true)}
               onLoadEnd={() => setIsLoading(false)}
               onError={() => setHasError(true)}
             />
-          ) : null}
+          )}
           
           {isLoading && !hasError && (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color="#8E8E93" />
+              <ActivityIndicator size="small" color="#FFFFFF" />
             </View>
           )}
           
           {hasError && (
             <View style={styles.errorContainer}>
               <Ionicons name="image-outline" size={32} color="#8E8E93" />
-              <Text style={styles.errorText}>Image unavailable</Text>
             </View>
           )}
         </View>
         
+        {/* Content Section */}
         <View style={styles.contentContainer}>
-          <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+          {/* Restaurant Name */}
+          <Text style={styles.restaurantName} numberOfLines={1} ellipsizeMode="tail">
             {restaurant.name}
           </Text>
           
+          {/* Tags */}
           <View style={styles.tagsContainer}>
             {restaurant.tags.map((tag, index) => (
               <Tag key={index} text={tag.text} variant={tag.variant} />
             ))}
           </View>
-
-          <View style={styles.footer}>
+          
+          {/* Rating and Distance */}
+          <View style={styles.footerContainer}>
             <View style={styles.ratingContainer}>
-              <Star size={14} color="#FFB800" />
-              <Text style={styles.ratingText}>
-                <Text style={styles.ratingNumber}>{restaurant.rating}</Text> ({restaurant.reviews})
-              </Text>
+              <Star size={16} color="#FFB800" />
+              <Text style={styles.ratingText}>{restaurant.rating}</Text>
+              <Text style={styles.reviewCount}>({restaurant.reviews})</Text>
             </View>
             <View style={styles.distanceContainer}>
-              <MapPin size={14} color="#8E8E93" />
+              <MapPin size={16} color="#8E8E93" />
               <Text style={styles.distanceText}>{restaurant.distance}</Text>
             </View>
           </View>
@@ -193,14 +196,11 @@ const RestaurantCard: React.FC<RestaurantProps> = ({ restaurant, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 280,
+    width: '100%',
     backgroundColor: 'white',
     borderRadius: 16,
     overflow: 'hidden',
-    marginTop: 5,
-    marginLeft: 1,
-    marginRight: 12,
-    marginBottom: 5,
+    marginBottom: 16,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -214,16 +214,19 @@ const styles = StyleSheet.create({
     })
   },
   imageContainer: {
-    position: 'relative',
-    height: 150,
     width: '100%',
+    height: 180,
     backgroundColor: '#F2F2F7',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
   loadingContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   errorContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -231,60 +234,50 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F2F2F7',
   },
-  errorText: {
-    color: '#8E8E93',
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: '500',
-    letterSpacing: -0.2,
-  },
   contentContainer: {
     padding: 16,
   },
-  name: {
+  restaurantName: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
     color: '#1C1C1E',
+    marginBottom: 8,
     letterSpacing: -0.4,
-  },
-  logo: {
-    width: "100%",
-    height: 150,
   },
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: 12,
     gap: 6,
-    marginBottom: 10
   },
-  footer: {
+  footerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 2,
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
-  },
-  ratingNumber: {
-    fontWeight: '500',
-    color: '#1C1C1E',
+    alignItems: 'center',
   },
   ratingText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1C1C1E',
     marginLeft: 4,
-    color: '#8E8E93',
+  },
+  reviewCount: {
     fontSize: 14,
+    color: '#8E8E93',
+    marginLeft: 2,
   },
   distanceContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   distanceText: {
-    marginLeft: 4,
-    color: '#8E8E93',
     fontSize: 14,
+    color: '#8E8E93',
+    marginLeft: 4,
   },
   modalContainer: {
     flex: 1,
@@ -299,4 +292,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RestaurantCard;
+export default VerticalRestaurantCard;
