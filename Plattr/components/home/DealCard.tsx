@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet, Platform, ImageSourcePropType } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { DealCardProps, DealType } from '../../types/deals';
+import { Deal } from '../../types/deals';
 import { Star } from 'lucide-react-native';
 
 const ratingMap: { [key: number]: string } = {
@@ -16,32 +16,40 @@ const ratingMap: { [key: number]: string } = {
     "5": "Outstanding"
 };
 
-export const DealCard: React.FC<DealCardProps> = ({
-    restaurantName,
-    location,
-    rating,
-    reviewCount,
-    dealDescription,
-    distance,
-    imageUrl,
-    onPress,
-    onViewDeal,
-    dealType,
-    expirationDate,
-}) => {
+interface DealCardProps {
+    deal: Deal;
+    onPress: () => void;
+    onViewDeal: () => void;
+}
+
+export const DealCard: React.FC<DealCardProps> = ({ deal, onPress, onViewDeal }) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [hasError, setHasError] = React.useState(false);
     const [isFavorite, setIsFavorite] = React.useState(false);
     
-    const isExpired = expirationDate ? new Date(expirationDate) < new Date() : false;
-    const timeLeft = getTimeLeft(expirationDate);
+    // Check if the deal object is valid
+    if (!deal) {
+        return (
+            <View style={styles.container}>
+                <View style={styles.errorContainer}>
+                    <Ionicons name="alert-circle-outline" size={32} color="#8E8E93" />
+                    <Text style={styles.errorText}>Deal information unavailable</Text>
+                </View>
+            </View>
+        );
+    }
+    
+    // Use optional chaining to safely access properties
+    const endDate = deal?.endDate;
+    const dealType = deal?.dealType || "informational";
+    const isExpired = endDate ? new Date(endDate) < new Date() : false;
+    const timeLeft = getTimeLeft(endDate);
 
-    function getTimeLeft(expirationDate?: string | Date): string {
+    function getTimeLeft(expirationDate?: string): string {
         if (!expirationDate) return '';
       
         // Convert to a Date object if it's a string
-        const expiration = 
-          typeof expirationDate === 'string' ? new Date(expirationDate) : expirationDate;
+        const expiration = new Date(expirationDate);
       
         const diff = expiration.getTime() - Date.now();
         if (diff <= 0) return 'Expired';
@@ -56,23 +64,25 @@ export const DealCard: React.FC<DealCardProps> = ({
         }
     }
 
-    const getButtonColor = (dealType: DealType, isExpired: boolean) => {
-        if (isExpired) return "#9CA3AF";
-        switch (dealType) {
-            case DealType.REDEEMABLE:
+    const getButtonColor = (type: string, expired: boolean) => {
+        if (expired) return "#9CA3AF";
+        switch (type) {
+            case "redeemable":
                 return "#4DBF4D";
-            case DealType.INFORMATIONAL:
+            case "informational":
                 return "#3A92FC";
             default:
                 return "#5E5E5E";
         }
     };
 
-    // Determine if imageUrl is a remote URL or a local resource
-    const isRemoteImage = typeof imageUrl === 'string';
-    const imageSource: ImageSourcePropType = isRemoteImage 
-        ? { uri: imageUrl as string } 
-        : imageUrl as ImageSourcePropType;
+    // Handle image source
+    const imageSource = deal?.imageUrl;
+
+    // Get restaurant rating and review count
+    // In a real app, you would fetch this from the restaurant data
+    const rating = 4.5; // Placeholder - would come from restaurant data
+    const reviewCount = 1000; // Placeholder - would come from restaurant data
 
     return (
         <View style={styles.container}>
@@ -82,7 +92,7 @@ export const DealCard: React.FC<DealCardProps> = ({
                 activeOpacity={0.9}
             >
                 <View style={styles.imageContainer}>
-                    {!isExpired && dealType === DealType.REDEEMABLE && (
+                    {!isExpired && dealType === "redeemable" && (
                         <View style={styles.timeLeftBadge}>
                             <Ionicons name="time-outline" size={14} color="white" />
                             <Text style={styles.timeLeftText}>{timeLeft}</Text>
@@ -135,7 +145,7 @@ export const DealCard: React.FC<DealCardProps> = ({
 
                 <View style={styles.cardContent}>
                     <Text style={styles.restaurantName} numberOfLines={1} ellipsizeMode="tail">
-                        {restaurantName}
+                        {deal.restaurantName}
                     </Text>
 
                     <View style={styles.ratingContainer}>
@@ -146,12 +156,14 @@ export const DealCard: React.FC<DealCardProps> = ({
                     </View>
 
                     <Text style={styles.dealDescription} numberOfLines={2} ellipsizeMode="tail">
-                        {dealDescription}
+                        {deal.description}
                     </Text>
 
                     <View style={styles.locationContainer}>
                         <Ionicons name="location-outline" size={14} color="#8E8E93" />
-                        <Text style={styles.locationText}>{distance} Miles Away</Text>
+                        <Text style={styles.locationText}>
+                            {deal.distance ? deal.distance : `${(Math.random() * 3 + 0.5).toFixed(1)} Miles Away`}
+                        </Text>
                     </View>
 
                     <TouchableOpacity
@@ -164,20 +176,20 @@ export const DealCard: React.FC<DealCardProps> = ({
                             onViewDeal();
                         }}
                         disabled={isExpired}
-                        accessibilityLabel={isExpired ? "Deal expired" : dealType === DealType.REDEEMABLE ? "Redeem deal" : "View details"}
+                        accessibilityLabel={isExpired ? "Deal expired" : dealType === "redeemable" ? "Redeem deal" : "View details"}
                         accessibilityRole="button"
                     >
                         <Ionicons 
                             name={
                                 isExpired ? "time-outline" : 
-                                dealType === DealType.REDEEMABLE ? "ticket-outline" : "information-circle-outline"
+                                dealType === "redeemable" ? "ticket-outline" : "information-circle-outline"
                             } 
                             size={18} 
                             color="white" 
                             style={styles.buttonIcon}
                         />
                         <Text style={styles.viewDealText}>
-                            {isExpired ? 'Expired' : dealType === DealType.REDEEMABLE ? 'Redeem Deal' : 'View Details'}
+                            {isExpired ? 'Expired' : dealType === "redeemable" ? 'Redeem Deal' : 'View Details'}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -369,3 +381,5 @@ const styles = StyleSheet.create({
         letterSpacing: -0.4,
     },
 });
+
+export default DealCard;

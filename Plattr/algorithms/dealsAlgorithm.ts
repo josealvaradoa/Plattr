@@ -1,8 +1,8 @@
 // dealsAlgorithm.ts
-import { DealCardProps } from '@/types/deals';
+import { Deal } from '../types/deals';
 import { filterExpiredDeals } from './filterExpired';
 import { computeDealScore } from './scoring';
-export function getProcessedDeals(deals: DealCardProps[]): DealCardProps[] {
+export function getProcessedDeals(deals: Deal[]): Deal[] {
   // 1. Filter out invalid/expired deals
   const validDeals = deals.filter(filterExpiredDeals);
 

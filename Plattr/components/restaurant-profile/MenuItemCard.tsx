@@ -1,150 +1,141 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { MenuItemProps } from './types';
-import TagPill from './TagPill';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { MenuItem } from '../../types/menuItem';
 
-const MenuItemCard: React.FC<MenuItemProps> = ({ item }) => {
-  const hasImage = !!item.imageUri;
+interface MenuItemCardProps {
+  item: MenuItem;
+}
+
+const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
+  // Format price from number to string with $ prefix
+  const formattedPrice = item.price ? `$${item.price.toFixed(2)}` : '';
   
   return (
-    <View style={styles.menuItem}>
-      <View style={[
-        styles.menuItemContent,
-        !hasImage && styles.menuItemContentFull
-      ]}>
-        <View style={styles.menuItemHeader}>
-          <View style={styles.nameContainer}>
-            <Text style={styles.menuItemName}>{item.name}</Text>
-            {item.popular && (
-              <View style={styles.popularContainer}>
-                <Text style={styles.popularBadge}>• Popular</Text>
+    <TouchableOpacity style={styles.container} activeOpacity={0.7}>
+      <View style={styles.contentContainer}>
+        <View style={styles.infoContainer}>
+          <Text style={styles.name}>{item.name}</Text>
+          
+          {item.description && (
+            <Text style={styles.description} numberOfLines={2}>
+              {item.description}
+            </Text>
+          )}
+          
+          <View style={styles.footer}>
+            {formattedPrice && (
+              <Text style={styles.price}>{formattedPrice}</Text>
+            )}
+            
+            {item.dietaryInfo && item.dietaryInfo.length > 0 && (
+              <View style={styles.dietaryContainer}>
+                {item.dietaryInfo.map((info, index) => (
+                  <View key={index} style={styles.dietaryBadge}>
+                    <Text style={styles.dietaryText}>{info}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+            
+            {item.isPopular && (
+              <View style={styles.popularBadge}>
+                <Text style={styles.popularText}>Popular</Text>
               </View>
             )}
           </View>
-          <Text style={styles.menuItemPrice}>{item.price}</Text>
         </View>
         
-        {item.description && (
-          <Text style={styles.menuItemDescription}>{item.description}</Text>
-        )}
-        
-        {item.dietaryInfo && item.dietaryInfo.length > 0 && (
-          <View style={styles.dietaryContainer}>
-            {item.dietaryInfo.map((info, i) => (
-              <TagPill key={i} text={info} variant="dietary" />
-            ))}
+        {item.imageUrl && (
+          <View style={styles.imageContainer}>
+            <Image
+              source={item.imageUrl}
+              style={styles.image}
+              resizeMode="cover"
+            />
           </View>
         )}
       </View>
-      
-      {hasImage ? (
-        <View style={styles.imageContainer}>
-          <Image 
-            source={{ uri: item.imageUri }} 
-            style={styles.menuItemImage}
-            resizeMode="cover"
-          />
-        </View>
-      ) : null}
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  menuItem: {
-    flexDirection: 'row',
-    marginVertical: 8,
-    marginHorizontal: 0,
-    backgroundColor: '#FFFFFF',
+  container: {
+    backgroundColor: 'white',
     borderRadius: 12,
-    padding: 16,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    marginBottom: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
-  menuItemContent: {
-    flex: 1,
-    marginRight: 16,
-    justifyContent: 'space-between',
-  },
-  menuItemContentFull: {
-    marginRight: 0,
-  },
-  menuItemHeader: {
+  contentContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
   },
-  nameContainer: {
+  infoContainer: {
     flex: 1,
-    marginRight: 12,
+    marginRight: 8,
   },
-  menuItemName: {
-    fontSize: 17,
+  name: {
+    fontSize: 16,
     fontWeight: '600',
-    color: '#000000',
-    letterSpacing: -0.4,
-    marginBottom: 2,
+    color: '#1C1C1E',
+    marginBottom: 4,
   },
-  popularContainer: {
-    marginTop: 2,
+  description: {
+    fontSize: 14,
+    color: '#3A3A3C',
+    marginBottom: 8,
+    lineHeight: 18,
   },
-  popularBadge: {
-    fontSize: 13,
-    color: '#FF5A5F',
-    fontWeight: '500',
-  },
-  menuItemPrice: {
-    fontSize: 17,
-    color: '#000000',
-    fontWeight: '600',
-  },
-  menuItemDescription: {
-    fontSize: 15,
-    color: '#666666',
-    marginBottom: 10,
-    lineHeight: 20,
-    letterSpacing: -0.24,
-  },
-  imageContainer: {
-    borderRadius: 10,
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-    }),
-  },
-  menuItemImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 10,
-  },
-  menuItemPlaceholder: {
-    width: 90,
-    height: 90,
-    borderRadius: 10,
-    backgroundColor: '#F5F5F7',
-    justifyContent: 'center',
+  footer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  price: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#3A3A3C',
+    marginRight: 8,
   },
   dietaryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 4,
+  },
+  dietaryBadge: {
+    backgroundColor: '#F2F2F7',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginRight: 4,
+  },
+  dietaryText: {
+    fontSize: 12,
+    color: '#3A3A3C',
+  },
+  popularBadge: {
+    backgroundColor: '#FF9500',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  popularText: {
+    fontSize: 12,
+    color: 'white',
+    fontWeight: '500',
+  },
+  imageContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
 });
 

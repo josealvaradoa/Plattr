@@ -1,9 +1,9 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import ProfileDealCard from './ProfileDealCard';
-import { DealCardProps } from '../../types/deals';
+import { Deal } from '../../types/deals';
 interface DealsListProps {
-  deals: DealCardProps[];
+  deals: Deal[];
   savedDeals: string[];
   onSaveDeal: (dealId: string) => void;
   onViewDeal: (dealId: string) => void;
@@ -25,7 +25,7 @@ const DealsList: React.FC<DealsListProps> = ({ deals, savedDeals, onSaveDeal, on
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.contentContainer}
     >
-      {deals.map((deal, index) => (
+      {deals.map((deal: Deal, index: number) => (
         <ProfileDealCard
           key={deal.id}
           deal={deal}

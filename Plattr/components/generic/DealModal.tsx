@@ -14,12 +14,12 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { DealCardProps, DealType } from '../../types/deals';
+import { Deal } from '../../types/deals';
 
 interface DealModalProps {
   visible: boolean;
   onClose: () => void;
-  deal: DealCardProps;
+  deal: Deal;
   onRedeem?: (dealId: string) => Promise<void>;
   isEmbedded?: boolean; // New prop to indicate if this is embedded in a restaurant profile
 }
@@ -115,8 +115,8 @@ const DealModal: React.FC<DealModalProps> = ({
   };
 
   const renderRedemptionSection = () => {
-    if (deal.dealType !== DealType.REDEEMABLE) return null;
-    const isExpired = deal.expirationDate ? new Date(deal.expirationDate) < new Date() : false;
+    if (deal.dealType !== 'redeemable') return null;
+    const isExpired = deal.endDate ? new Date(deal.endDate) < new Date() : false;
 
     if (isExpired) {
       return (
@@ -126,12 +126,11 @@ const DealModal: React.FC<DealModalProps> = ({
       );
     }
 
-    if (deal.isRedeemed) {
+    if (deal.totalRedemptions !== undefined && deal.totalRedemptions < 0) {
       return (
         <View style={styles.redemptionContainer}>
           <View style={styles.codeContainer}>
             <Text style={styles.redeemedTitle}>Redemption Code:</Text>
-            <Text style={styles.redemptionCode}>{deal.redemptionCode}</Text>
           </View>
           <Text style={styles.redeemedText}>Deal has been redeemed</Text>
         </View>
@@ -171,27 +170,27 @@ const DealModal: React.FC<DealModalProps> = ({
         {!isEmbedded && (
           <Text style={styles.restaurant}>{deal.restaurantName}</Text>
         )}
-        <Text style={styles.title}>{deal.dealDescription}</Text>
+        <Text style={styles.title}>{deal.title}</Text>
         <View style={styles.termsContainer}>
           <Text style={styles.termsTitle}>Deal Details</Text>
-          <Text style={styles.termsText}>{deal.dealDetails}</Text>
+          <Text style={styles.termsText}>{deal.description}</Text>
         </View>
         <View style={styles.termsContainer}>
           <Text style={styles.termsTitle}>Terms & Conditions</Text>
-          {Array.isArray(deal.terms) ? (
-            deal.terms.map((term, index) => (
+          {Array.isArray(deal.termsAndConditions) ? (
+            deal.termsAndConditions.map((term, index) => (
               <View key={index} style={styles.termItem}>
                 <View style={styles.bulletPoint} />
                 <Text style={styles.termsText}>{term}</Text>
               </View>
             ))
           ) : (
-            <Text style={styles.termsText}>{deal.terms}</Text>
+            <Text style={styles.termsText}>{deal.termsAndConditions}</Text>
           )}
         </View>
-        {deal.expirationDate && (
+        {deal.endDate && (
           <Text style={styles.expiry}>
-            Valid until: {new Date(deal.expirationDate).toLocaleDateString()}
+            Valid until: {new Date(deal.endDate).toLocaleDateString()}
           </Text>
         )}
 
@@ -199,8 +198,8 @@ const DealModal: React.FC<DealModalProps> = ({
           <View style={styles.redemptionInfo}>
             <Ionicons name="repeat-outline" size={16} color="#666" style={styles.infoIcon} />
             <Text style={styles.infoText}>
-              {deal.remainingRedemptions !== undefined 
-                ? `${deal.remainingRedemptions} of ${deal.maxRedemptions} redemptions left`
+              {deal.totalRedemptions !== undefined 
+                ? `${deal.totalRedemptions} of ${deal.maxRedemptions} redemptions left`
                 : `${deal.maxRedemptions} max redemptions`}
             </Text>
           </View>

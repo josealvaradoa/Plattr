@@ -1,452 +1,371 @@
-import { DealCardProps, DealType } from '../types/deals';
+// deals.ts
+// Updated to match restaurant IDs with restaurantData.ts
 
-export const mockDeals: DealCardProps[] = [
-  // 1 - REDEEMABLE
+import { Deal } from '../types/deals';
+
+// Sample mock data with consistent restaurant IDs
+export const mockDeals: Deal[] = [
   {
-    id: '1',
-    restaurantName: "Lillie Pearl",
-    location: "416 E Grace St, Richmond, VA 23219",
-    rating: 4.7,
-    reviewCount: 220,
-    dealDescription: "20% Off Signature Shrimp & Grits",
-    dealDetails: "Enjoy 20% off our signature shrimp & grits dish. Offer valid for dine-in only.",
-    distance: "0.7",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-04-12T23:59:59",
-    maxRedemptions: 100,
-    remainingRedemptions: 90,
-    terms: ["Valid until 2025-04-12", "Cannot be combined with other offers"]
-  },
-  // 2 - INFORMATIONAL
-  {
-    id: '2',
-    restaurantName: "Lucky AF",
-    location: "1203 E Main St, Richmond, VA 23219",
-    rating: 4.5,
-    reviewCount: 28,
-    dealDescription: "Happy Hour: $5 Signature Cocktails",
-    dealDetails: "Enjoy $5 signature cocktails during our happy hour (Mon-Fri 4PM-7PM). Dine-in only.",
-    distance: "0.8",
-    imageUrl: require('../assets/images/restaurants/resFour.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Happy hour pricing applies only Mon-Fri 4PM-7PM", "Cannot be combined with other offers"]
-  },
-  // 3 - REDEEMABLE
-  {
-    id: '3',
-    restaurantName: "Perly's Restaurant & Delicatessen",
-    location: "111 E Grace St, Richmond, VA 23219",
-    rating: 4.5,
-    reviewCount: 1542,
-    dealDescription: "15% Off Breakfast Items",
-    dealDetails: "Get 15% off all breakfast items served between 7AM and 10AM. Dine-in only.",
-    distance: "1.5",
-    imageUrl: require('../assets/images/restaurants/resFive.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-15T23:59:59",
-    maxRedemptions: 100,
-    remainingRedemptions: 90,
-    terms: ["Valid until 2025-02-15", "Cannot be combined with other offers"]
-  },
-  // 4 - REDEEMABLE
-  {
-    id: '4',
-    restaurantName: "ZZQ Texas Craft Barbeque",
-    location: "3201 W Moore St, Richmond, VA 23230",
-    rating: 4.8,
-    reviewCount: 935,
-    dealDescription: "Free Side with $25+ Purchase",
-    dealDetails: "Receive a complimentary side dish with any purchase over $25. Dine-in only.",
-    distance: "2.1",
-    imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-23T23:59:59",
-    maxRedemptions: 100,
-    remainingRedemptions: 90,
-    terms: ["Valid until 2025-02-23", "Cannot be combined with other offers"]
-  },
-  // 5 - REDEEMABLE
-  {
-    id: '5',
-    restaurantName: "Sabai",
-    location: "2727 W Broad St, Richmond, VA 23220",
-    rating: 4.5,
-    reviewCount: 721,
-    dealDescription: "Happy Hour: $8 Craft Cocktails",
-    dealDetails: "Enjoy $8 craft cocktails during our happy hour (4PM-7PM). Dine-in only.",
-    distance: "2.0",
-    imageUrl: require('../assets/images/restaurants/resFive.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-28T23:59:59",
-    maxRedemptions: 100,
-    remainingRedemptions: 90,
-    terms: ["Valid until 2025-02-28", "Cannot be combined with other offers"]
-  },
-  // 6 - INFORMATIONAL
-  {
-    id: '6',
-    restaurantName: "The Daily Kitchen & Bar",
-    location: "2934 W Cary St, Richmond, VA 23221",
-    rating: 4.3,
-    reviewCount: 1128,
-    dealDescription: "Weekday Lunch Special: $12 Entrées",
-    dealDetails: "Enjoy select entrées for just $12 during weekday lunch (Mon-Fri 11AM-3PM). Dine-in only.",
-    distance: "2.8",
-    imageUrl: require('../assets/images/restaurants/resFour.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Available Mon-Fri 11AM-3PM only", "Cannot be combined with other offers"]
-  },
-  // 7 - REDEEMABLE
-  {
-    id: '7',
-    restaurantName: "City Diner",
-    location: "2805 W Cary St, Richmond, VA 23221",
-    rating: 4.2,
-    reviewCount: 811,
-    dealDescription: "BOGO Pancakes on Weekdays",
-    dealDetails: "Buy one stack of pancakes and get another free, available on weekdays from 7AM-9AM.",
-    distance: "2.5",
-    imageUrl: require('../assets/images/restaurants/resSix.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-20T23:59:59",
-    maxRedemptions: 50,
-    remainingRedemptions: 40,
-    terms: ["Valid until 2025-02-20", "Weekdays only", "Cannot be combined with other offers"]
-  },
-  // 8 - REDEEMABLE
-  {
-    id: '8',
-    restaurantName: "Stella's",
-    location: "1012 Lafayette St, Richmond, VA 23221",
-    rating: 4.7,
-    reviewCount: 1202,
-    dealDescription: "Free Dessert with Entrée",
-    dealDetails: "Enjoy a complimentary dessert with any entrée purchase after 5PM. Dine-in only.",
-    distance: "1.9",
-    imageUrl: require('../assets/images/restaurants/resSix.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-26T23:59:59",
-    maxRedemptions: 80,
-    remainingRedemptions: 75,
-    terms: ["Valid until 2025-02-26", "One dessert per table", "Cannot be combined with other offers"]
-  },
-  // 9 - REDEEMABLE
-  {
-    id: '9',
-    restaurantName: "Mama J's Kitchen",
-    location: "415 N 1st St, Richmond, VA 23219",
-    rating: 4.8,
-    reviewCount: 1256,
-    dealDescription: "Lunch Special: 10% Off",
-    dealDetails: "Get 10% off your lunch order (Tue-Fri 11AM-2PM). Dine-in only.",
-    distance: "0.9",
-    imageUrl: require('../assets/images/restaurants/resFour.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-10T23:59:59",
-    maxRedemptions: 120,
-    remainingRedemptions: 120,
-    terms: ["Valid until 2025-02-10", "Tue-Fri only", "Cannot be combined with other offers"]
-  },
-  // 10 - INFORMATIONAL
-  {
-    id: '10',
-    restaurantName: "Roastology Coffee",
-    location: "2701 W Cary St, Richmond, VA 23220",
-    rating: 4.6,
-    reviewCount: 447,
-    dealDescription: "New Seasonal Menu Launch",
-    dealDetails: "Discover our new spring coffee menu with fresh flavors. Stop by and taste the season!",
-    distance: "2.2",
-    imageUrl: require('../assets/images/restaurants/resSix.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Seasonal items subject to availability", "No other promos apply"]
-  },
-  // 11 - INFORMATIONAL
-  {
-    id: '11',
-    restaurantName: "Kabob Place",
-    location: "6216 Lakeside Ave, Richmond, VA 23228",
-    rating: 4.6,
-    reviewCount: 263,
-    dealDescription: "Family-Style Dinner Platters",
-    dealDetails: "Enjoy our family-style dinner platters perfect for group dining. Reservation recommended.",
-    distance: "6.0",
-    imageUrl: require('../assets/images/restaurants/resFive.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Platter serves up to 4", "Reservations recommended for large groups"]
-  },
-  // 12 - REDEEMABLE
-  {
-    id: '12',
-    restaurantName: "Mellow Mushroom",
-    location: "3012 W Cary St, Richmond, VA 23221",
-    rating: 4.2,
-    reviewCount: 595,
-    dealDescription: "20% Off Any Large Pizza",
-    dealDetails: "Get 20% off any large pizza on weekends (Fri-Sun). Available for dine-in or takeout.",
-    distance: "3.0",
-    imageUrl: require('../assets/images/restaurants/resFour.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-03-01T23:59:59",
-    maxRedemptions: 200,
-    remainingRedemptions: 200,
-    terms: ["Valid until 2025-03-01", "Fri-Sun only", "Cannot be combined with other offers"]
-  },
-  // 13 - INFORMATIONAL
-  {
-    id: '13',
-    restaurantName: "The Roosevelt",
-    location: "623 N 25th St, Richmond, VA 23223",
-    rating: 4.7,
-    reviewCount: 697,
-    dealDescription: "Weeknight Wine Specials",
-    dealDetails: "Enjoy half-off select wines from 5PM-7PM (Mon-Thu). Dine-in only.",
-    distance: "2.1",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Available Mon-Thu only", "Valid for select wines"]
-  },
-  // 14 - REDEEMABLE
-  {
-    id: '14',
-    restaurantName: "Heritage",
-    location: "1627 W Main St, Richmond, VA 23220",
-    rating: 4.8,
-    reviewCount: 520,
-    dealDescription: "20% Off Brunch Entrées",
-    dealDetails: "Save 20% on all brunch entrées on Saturdays and Sundays. Dine-in only.",
-    distance: "1.7",
-    imageUrl: require('../assets/images/restaurants/resThree.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-25T23:59:59",
-    maxRedemptions: 80,
-    remainingRedemptions: 80,
-    terms: ["Valid until 2025-02-25", "Sat & Sun only", "Cannot be combined with other offers"]
-  },
-  // 15 - INFORMATIONAL
-  {
-    id: '15',
-    restaurantName: "The Veil Brewing Co.",
-    location: "1301 Roseneath Rd, Richmond, VA 23230",
-    rating: 4.8,
-    reviewCount: 840,
-    dealDescription: "New Beer Release & Tasting Event",
-    dealDetails: "Join us for our new beer release and free tasting event this Friday evening.",
-    distance: "2.3",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Must be 21+ to attend", "Limited release while supplies last"]
-  },
-  // 16 - REDEEMABLE
-  {
-    id: '16',
-    restaurantName: "Hardywood Park Craft Brewery",
-    location: "2410 Ownby Ln, Richmond, VA 23220",
-    rating: 4.7,
-    reviewCount: 1500,
-    dealDescription: "Trivia Night Specials: $1 Off Pints",
-    dealDetails: "Enjoy trivia night with $1 off pints every Wednesday after 6PM.",
-    distance: "2.2",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-03-02T23:59:59",
-    maxRedemptions: 100,
-    remainingRedemptions: 100,
-    terms: ["Valid until 2025-03-02", "Wednesdays only", "Must be 21+ to purchase alcohol"]
-  },
-  // 17 - REDEEMABLE
-  {
-    id: '17',
-    restaurantName: "Proper Pie Co.",
-    location: "2505 E Broad St, Richmond, VA 23223",
-    rating: 4.8,
-    reviewCount: 800,
-    dealDescription: "Buy Two Savory Pies, Get One Sweet Pie Half Off",
-    dealDetails: "Mix and match any savory pies and enjoy a sweet pie at half price. Available for dine-in or takeout.",
-    distance: "3.1",
-    imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-22T23:59:59",
-    maxRedemptions: 150,
-    remainingRedemptions: 150,
-    terms: ["Valid until 2025-02-22", "Limit one sweet pie discount per order", "Cannot be combined with other offers"]
-  },
-  // 18 - REDEEMABLE
-  {
-    id: '18',
-    restaurantName: "Edo's Squid",
-    location: "411 N Harrison St, Richmond, VA 23220",
-    rating: 4.6,
-    reviewCount: 780,
-    dealDescription: "Student Special: Free Appetizer",
-    dealDetails: "Show a valid student ID and receive a free appetizer with any entrée purchase.",
-    distance: "1.4",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-28T23:59:59",
-    maxRedemptions: 200,
-    remainingRedemptions: 200,
-    terms: ["Valid until 2025-02-28", "Must show valid student ID", "One free appetizer per table"]
-  },
-  // 19 - REDEEMABLE
-  {
-    id: '19',
-    restaurantName: "Sugar Shack Donuts",
-    location: "1001 N Lombardy St, Richmond, VA 23220",
-    rating: 4.5,
-    reviewCount: 845,
-    dealDescription: "Midnight Munchies Promo",
-    dealDetails: "Get a free coffee with any donut order from 10PM to midnight. Dine-in or takeout.",
-    distance: "1.6",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-02-14T23:59:59",
-    maxRedemptions: 300,
-    remainingRedemptions: 300,
-    terms: ["Valid until 2025-02-14", "Only from 10PM to midnight", "Cannot be combined with other offers"]
-  },
-  // 20 - INFORMATIONAL
-  {
-    id: '20',
-    restaurantName: "Lemaire Restaurant",
-    location: "101 W Franklin St, Richmond, VA 23220",
-    rating: 4.7,
-    reviewCount: 910,
-    dealDescription: "Cocktail Class: Learn to Mix Classics",
-    dealDetails: "Join our expert bartenders for a cocktail-making class held every second Thursday.",
-    distance: "1.3",
-    imageUrl: require('../assets/images/restaurants/resThree.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Reservation required", "Must be 21+ to participate"]
-  },
-  // 21 - REDEEMABLE (New)
-  {
-    id: '21',
-    restaurantName: "L'Opossum",
-    location: "626 China St, Richmond, VA 23220",
-    rating: 4.9,
-    reviewCount: 612,
-    dealDescription: "25% Off Chef's Tasting Menu",
-    dealDetails: "Experience our celebrated Chef's Tasting Menu at 25% off on Tuesdays. Reservation required.",
-    distance: "2.0",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-03-15T23:59:59",
-    maxRedemptions: 50,
-    remainingRedemptions: 50,
-    terms: ["Valid until 2025-03-15", "Tuesdays only", "Reservation required"]
-  },
-  // 22 - INFORMATIONAL (New)
-  {
-    id: '22',
-    restaurantName: "Shagbark",
-    location: "4901 Libbie Mill E Blvd, Richmond, VA 23230",
-    rating: 4.7,
-    reviewCount: 480,
-    dealDescription: "Farm-to-Table Tasting Experience",
-    dealDetails: "Join us for a special farm-to-table dining experience featuring local seasonal ingredients.",
-    distance: "5.2",
-    imageUrl: require('../assets/images/restaurants/resThree.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Reservation recommended", "Menu changes based on seasonal availability"]
-  },
-  // 23 - REDEEMABLE (New)
-  {
-    id: '23',
+    // Deal 1 - Champagne Brunch Special at Can Can Brasserie
+    PK: "RESTAURANT#restaurant_201",
+    SK: "DEAL#deal_101",
+    GSI1PK: "LOCATION#dr5r7",
+    GSI1SK: "DEAL#2025-12-30T23:59:59Z#deal_101",
+    GSI2PK: "DEAL#ACTIVE",
+    GSI2SK: "2025-12-30T23:59:59Z#Can Can Brasserie",
+    GSI3PK: "DEAL#POPULAR",
+    GSI3SK: "75#deal_101",
+    
+    id: "deal_101",
+    restaurantId: "restaurant_201",
     restaurantName: "Can Can Brasserie",
-    location: "3120 W Cary St, Richmond, VA 23221",
-    rating: 4.6,
-    reviewCount: 1042,
-    dealDescription: "Champagne Brunch Special: Half-Price Bottles",
-    dealDetails: "Enjoy half-price bottles of champagne during our weekend brunch service.",
-    distance: "3.1",
+    title: "Champagne Brunch Special",
+    description: "Half-Price Bottles",
+    details: "Enjoy half-price bottles of champagne during our weekend brunch service.",
     imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-03-30T23:59:59",
+    dealType: "redeemable",
+    
+    startDate: "2025-01-01T00:00:00Z",
+    endDate: "2025-12-30T23:59:59Z",
+    daysValid: ["saturday", "sunday"],
+    timeRestrictions: {
+      start: "10:00",
+      end: "14:00"
+    },
+    
     maxRedemptions: 100,
-    remainingRedemptions: 100,
-    terms: ["Valid until 2025-03-30", "Saturdays and Sundays only, 10AM-2PM", "Must be 21+ to purchase alcohol"]
+    totalRedemptions: 25,
+    perUserLimit: 2,
+    redemptionInstructions: "Show this screen to your server when ordering",
+    termsAndConditions: [
+      "Valid until December 30th, 2025",
+      "Saturdays and Sundays only, 10AM-2PM",
+      "Must be 21+ to purchase alcohol"
+    ],
+    
+    isFeatured: true,
+    createdAt: "2024-12-15T14:30:00Z",
+    updatedAt: "2025-01-10T09:15:00Z",
+    isActive: true,
+    
+    restaurantLocation: {
+      latitude: 37.5534,
+      longitude: -77.4512
+    },
+    distance: "3.1 miles"
   },
-  // 24 - REDEEMABLE (New)
   {
-    id: '24',
-    restaurantName: "Cobra Burger",
-    location: "400 N 27th St, Richmond, VA 23223",
-    rating: 4.8,
-    reviewCount: 345,
-    dealDescription: "Student Wednesdays: $2 Off Burgers",
-    dealDetails: "Students get $2 off any burger on Wednesdays with valid ID. Dine-in only.",
-    distance: "2.4",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.REDEEMABLE,
-    expirationDate: "2025-05-01T23:59:59",
-    maxRedemptions: 300,
-    remainingRedemptions: 300,
-    terms: ["Valid until 2025-05-01", "Wednesdays only", "Must present valid student ID"]
+    // Deal 2 - Cocktail Class at Lemaire
+    PK: "RESTAURANT#restaurant_202",
+    SK: "DEAL#deal_102",
+    GSI1PK: "LOCATION#dr5r6",
+    GSI1SK: "DEAL#2025-12-31T23:59:59Z#deal_102",
+    GSI2PK: "DEAL#ACTIVE",
+    GSI2SK: "2025-12-31T23:59:59Z#Lemaire Restaurant",
+    GSI3PK: "DEAL#POPULAR",
+    GSI3SK: "45#deal_102",
+    
+    id: "deal_102",
+    restaurantId: "restaurant_202",
+    restaurantName: "Lemaire Restaurant",
+    title: "Cocktail Class",
+    description: "Learn to Mix Classics",
+    details: "Join our expert bartenders for a cocktail-making class held every second Thursday.",
+    imageUrl: require('../assets/images/restaurants/resThree.jpg'),
+    dealType: "informational",
+    
+    startDate: "2025-01-01T00:00:00Z",
+    endDate: "2025-12-31T23:59:59Z",
+    daysValid: ["thursday"],
+    timeRestrictions: {
+      start: "18:00",
+      end: "20:00"
+    },
+    
+    maxRedemptions: null,
+    totalRedemptions: 0,
+    perUserLimit: null,
+    redemptionInstructions: "",
+    termsAndConditions: [
+      "Reservation required",
+      "Must be 21+ to participate"
+    ],
+    
+    isFeatured: false,
+    createdAt: "2024-12-10T11:30:00Z",
+    updatedAt: "2024-12-10T11:30:00Z",
+    isActive: true,
+    
+    restaurantLocation: {
+      latitude: 37.5460,
+      longitude: -77.4427
+    },
+    distance: "1.3 miles"
   },
-  // 25 - INFORMATIONAL (New)
   {
-    id: '25',
-    restaurantName: "Bookbinder's Seafood & Steakhouse",
-    location: "2306 E Cary St, Richmond, VA 23223",
-    rating: 4.5,
-    reviewCount: 523,
-    dealDescription: "Wine Down Wednesdays",
-    dealDetails: "Join us for Wine Down Wednesdays with 50% off select bottles all evening.",
-    distance: "1.8",
+    // Deal 3 - Raw Bar Happy Hour at Lulu's (updated to match restaurant_203)
+    PK: "RESTAURANT#restaurant_203",
+    SK: "DEAL#deal_103",
+    GSI1PK: "LOCATION#dr5r7",
+    GSI1SK: "DEAL#2025-12-30T23:59:59Z#deal_103",
+    GSI2PK: "DEAL#ACTIVE",
+    GSI2SK: "2025-12-30T23:59:59Z#Lulu's",
+    GSI3PK: "DEAL#POPULAR",
+    GSI3SK: "88#deal_103",
+    
+    id: "deal_103",
+    restaurantId: "restaurant_203",
+    restaurantName: "Lulu's",
+    title: "Raw Bar Happy Hour",
+    description: "Half-price oysters and $7 house wine during happy hour.",
+    details: "Enjoy half-price oysters and $7 house wine during happy hour.",
+    imageUrl: require('../assets/images/restaurants/resFive.jpg'),
+    dealType: "redeemable",
+    
+    startDate: "2025-01-01T00:00:00Z",
+    endDate: "2025-12-30T23:59:59Z",
+    daysValid: ["tuesday", "wednesday", "thursday"],
+    timeRestrictions: {
+      start: "17:00",
+      end: "19:00"
+    },
+    
+    maxRedemptions: 8,
+    totalRedemptions: 2,
+    perUserLimit: 1,
+    redemptionInstructions: "Show this screen to your server when ordering",
+    termsAndConditions: [
+      "Valid Tuesday-Thursday, 5PM-7PM",
+      "Bar area only",
+      "No reservations for happy hour"
+    ],
+    
+    isFeatured: false,
+    createdAt: "2024-11-30T09:15:00Z",
+    updatedAt: "2024-11-30T09:15:00Z",
+    isActive: true,
+    
+    restaurantLocation: {
+      latitude: 37.5407,
+      longitude: -77.4360
+    },
+    distance: "1.3 miles"
+  },
+  {
+    // Deal 4 - Trilce Coffee Special (updated to Perly's to match restaurant_103)
+    PK: "RESTAURANT#restaurant_103",
+    SK: "DEAL#deal_104",
+    GSI1PK: "LOCATION#dr5r6",
+    GSI1SK: "DEAL#2025-06-30T23:59:59Z#deal_104",
+    GSI2PK: "DEAL#ACTIVE",
+    GSI2SK: "2025-06-30T23:59:59Z#Perly's Restaurant & Delicatessen",
+    GSI3PK: "DEAL#POPULAR",
+    GSI3SK: "120#deal_104",
+    
+    id: "deal_104",
+    restaurantId: "restaurant_103",
+    restaurantName: "Perly's Restaurant & Delicatessen",
+    title: "Early Bird Special",
+    description: "15% Off All Breakfast Items Before 9AM",
+    details: "Start your day with our early bird special! Enjoy 15% off all breakfast items when you dine with us before 9AM on weekdays.",
+    imageUrl: require('../assets/images/restaurants/resFour.jpg'),
+    dealType: "redeemable",
+    
+    startDate: "2025-01-01T00:00:00Z",
+    endDate: "2025-06-30T23:59:59Z",
+    daysValid: ["monday", "tuesday", "wednesday", "thursday", "friday"],
+    timeRestrictions: {
+      start: "08:00",
+      end: "09:00"
+    },
+    
+    maxRedemptions: 200,
+    totalRedemptions: 80,
+    perUserLimit: 1,
+    redemptionInstructions: "Show this screen to your server when ordering",
+    termsAndConditions: [
+      "Valid until June 30th, 2025",
+      "Weekdays only, 8AM-9AM",
+      "Cannot be combined with other offers"
+    ],
+    
+    isFeatured: true,
+    createdAt: "2024-12-20T08:30:00Z",
+    updatedAt: "2024-12-20T08:30:00Z",
+    isActive: true,
+    
+    restaurantLocation: {
+      latitude: 37.5429,
+      longitude: -77.4372
+    },
+    distance: "1.1 miles"
+  },
+  {
+    // Deal 5 - BBQ Special at ZZQ (updated to match restaurant_104)
+    PK: "RESTAURANT#restaurant_104",
+    SK: "DEAL#deal_105",
+    GSI1PK: "LOCATION#dr5r8",
+    GSI1SK: "DEAL#2025-04-30T23:59:59Z#deal_105",
+    GSI2PK: "DEAL#ACTIVE",
+    GSI2SK: "2025-04-30T23:59:59Z#ZZQ Texas Craft Barbeque",
+    GSI3PK: "DEAL#POPULAR",
+    GSI3SK: "95#deal_105",
+    
+    id: "deal_105",
+    restaurantId: "restaurant_104",
+    restaurantName: "ZZQ Texas Craft Barbeque",
+    title: "BBQ & Brew Special",
+    description: "$5 Draft Beers with Any BBQ Plate",
+    details: "Enjoy any craft draft beer for just $5 when you purchase any BBQ plate. Perfect pairing for our signature smoked meats.",
     imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
-    onPress: () => {},
-    onViewDeal: () => {},
-    dealType: DealType.INFORMATIONAL,
-    terms: ["Wednesdays only", "Dine-in only", "Must be 21+ to purchase alcohol"]
+    dealType: "informational",
+    
+    startDate: "2025-01-01T00:00:00Z",
+    endDate: "2025-04-30T23:59:59Z",
+    daysValid: ["wednesday", "thursday", "friday"],
+    timeRestrictions: {
+      start: "16:00",
+      end: "19:00"
+    },
+    
+    maxRedemptions: null,
+    totalRedemptions: 0,
+    perUserLimit: null,
+    redemptionInstructions: "",
+    termsAndConditions: [
+      "Valid Wed-Fri 4PM-7PM",
+      "Cannot be combined with other offers",
+      "Must be 21+ to purchase alcohol"
+    ],
+    
+    isFeatured: false,
+    createdAt: "2024-12-05T16:45:00Z",
+    updatedAt: "2024-12-05T16:45:00Z",
+    isActive: true,
+    
+    restaurantLocation: {
+      latitude: 37.5675,
+      longitude: -77.4890
+    },
+    distance: "3.8 miles"
+  },
+  {
+    // Deal 6 - Weekend Brunch Special at Pinky's
+    PK: "RESTAURANT#restaurant_206",
+    SK: "DEAL#deal_106",
+    GSI1PK: "LOCATION#dr5r7",
+    GSI1SK: "DEAL#2025-12-31T23:59:59Z#deal_106",
+    GSI2PK: "DEAL#ACTIVE",
+    GSI2SK: "2025-12-31T23:59:59Z#Pinky's",
+    GSI3PK: "DEAL#POPULAR",
+    GSI3SK: "68#deal_106",
+    
+    id: "deal_106",
+    restaurantId: "restaurant_206",
+    restaurantName: "Pinky's",
+    title: "Weekend Brunch Special",
+    description: "Enjoy our signature brunch menu with $8 mimosa carafes every Saturday and Sunday morning.",
+    details: "Join us for a memorable weekend brunch experience with $8 mimosa carafes. Our chef's special brunch menu features farm-fresh ingredients and creative takes on classic morning favorites.",
+    imageUrl: require('../assets/images/restaurants/resFive.jpg'),
+    dealType: "informational",
+    
+    startDate: "2025-01-01T00:00:00Z",
+    endDate: "2025-12-31T23:59:59Z",
+    daysValid: ["saturday", "sunday"],
+    timeRestrictions: {
+      start: "10:00",
+      end: "14:00"
+    },
+    
+    maxRedemptions: null,
+    totalRedemptions: 0,
+    perUserLimit: null,
+    redemptionInstructions: "",
+    termsAndConditions: [
+      "Valid Saturday-Sunday, 10AM-2PM",
+      "One carafe per table",
+      "Must purchase brunch entree"
+    ],
+    
+    isFeatured: true,
+    createdAt: "2024-12-15T11:30:00Z",
+    updatedAt: "2024-12-15T11:30:00Z",
+    isActive: true,
+    
+    restaurantLocation: {
+      latitude: 37.5527,
+      longitude: -77.4482
+    },
+    distance: "0.8 miles"
   }
 ];
+
+// Helper function to check if a deal is happening now
+export const isDealHappeningNow = (deal: Deal): boolean => {
+  // Get current date and time
+  const now = new Date();
+  
+  // Check if today is in the deal's valid days
+  const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+  const isValidDay = deal.daysValid.some(day => day === dayOfWeek);
+  
+  if (!isValidDay) return false;
+  
+  // If there are no time restrictions, it's happening during the whole day
+  if (!deal.timeRestrictions) return true;
+  
+  // Check if current time is within the deal's time restrictions
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  
+  const startHour = parseInt(deal.timeRestrictions.start.split(':')[0]);
+  const startMinute = parseInt(deal.timeRestrictions.start.split(':')[1]);
+  
+  const endHour = parseInt(deal.timeRestrictions.end.split(':')[0]);
+  const endMinute = parseInt(deal.timeRestrictions.end.split(':')[1]);
+  
+  // Convert to minutes for easier comparison
+  const currentTimeInMinutes = currentHour * 60 + currentMinute;
+  const startTimeInMinutes = startHour * 60 + startMinute;
+  const endTimeInMinutes = endHour * 60 + endMinute;
+  
+  return currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes <= endTimeInMinutes;
+};
+
+// Helper function to get trending/popular deals
+export const getTrendingDeals = (limit: number = 5): Deal[] => {
+  // Sort by popularity (redemption count in GSI3SK)
+  return [...mockDeals]
+    .sort((a, b) => {
+      const aCount = parseInt(a.GSI3SK.split('#')[0]);
+      const bCount = parseInt(b.GSI3SK.split('#')[0]);
+      return bCount - aCount;
+    })
+    .slice(0, limit);
+};
+
+// Helper function to get featured deals
+export const getFeaturedDeals = (): Deal[] => {
+  return mockDeals.filter(deal => deal.isFeatured);
+};
+
+// Helper function to get deals by restaurant
+export const getDealsByRestaurant = (restaurantId: string): Deal[] => {
+  return mockDeals.filter(deal => deal.restaurantId === restaurantId);
+};
+
+// Helper function to get deals by cuisine type
+export const getDealsByCuisine = (cuisineType: string): Deal[] => {
+  // In a real implementation, you'd need to fetch restaurant data to get cuisine types
+  // For now, we'll assume we know which restaurants serve which cuisines
+  const restaurantsByCuisine: Record<string, string[]> = {
+    "French": ["restaurant_201"],
+    "American": ["restaurant_202", "restaurant_206"],
+    "Seafood": ["restaurant_203"],
+    "Jewish Deli": ["restaurant_103"],
+    "BBQ": ["restaurant_104"]
+  };
+  
+  const restaurantIds = restaurantsByCuisine[cuisineType] || [];
+  return mockDeals.filter(deal => restaurantIds.includes(deal.restaurantId));
+};

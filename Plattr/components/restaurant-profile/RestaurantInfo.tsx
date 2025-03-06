@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { RestaurantData } from '../../types/restaurant';
+import { Restaurant } from '../../types/restaurant';
 import TagPill from './TagPill';
 
 interface RestaurantInfoProps {
-  restaurant: RestaurantData;
+  restaurant: Restaurant;
 }
 
 const RestaurantInfo: React.FC<RestaurantInfoProps> = ({ restaurant }) => {
@@ -32,14 +32,14 @@ const RestaurantInfo: React.FC<RestaurantInfoProps> = ({ restaurant }) => {
       <View style={styles.ratingsRow}>
         <Ionicons name="star" size={16} color="#FFD700" />
         <Text style={styles.ratingText}>
-          {parseFloat(restaurant.rating).toFixed(1)} ({restaurant.reviews})
+          {parseFloat(restaurant.rating.toString()).toFixed(1)} ({restaurant.reviewCount})
         </Text>
         <Text style={styles.dotSeparator}>•</Text>
-        <Text style={styles.distanceText}>{restaurant.distance}</Text>
+        <Text style={styles.distanceText}>{restaurant.address.coordinates.latitude}, {restaurant.address.coordinates.longitude}</Text>
       </View>
       <View style={styles.tagsContainer}>
-        {restaurant.cuisine && restaurant.cuisine.length > 0 ? (
-          restaurant.cuisine.map((cuisine: string, index: number) => (
+        {restaurant.cuisines && restaurant.cuisines.length > 0 ? (
+          restaurant.cuisines.map((cuisine: string, index: number) => (
             <TagPill key={index} text={cuisine} variant="cuisine" />
           ))
         ) : (
@@ -57,7 +57,7 @@ const RestaurantInfo: React.FC<RestaurantInfoProps> = ({ restaurant }) => {
         </View>
         <View style={styles.quickInfoItem}>
           <Ionicons name="location-outline" size={16} color="#666" />
-          <Text style={styles.quickInfoText}>{restaurant.location}</Text>
+          <Text style={styles.quickInfoText}>{restaurant.address.street}, {restaurant.address.city}, {restaurant.address.state} {restaurant.address.zip}</Text>
         </View>
       </View>
     </View>

@@ -5,13 +5,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RestaurantHeaderProps } from './types';
 
-const RestaurantHeader: React.FC<RestaurantHeaderProps> = ({ imageUri, onClose }) => {
+const RestaurantHeader: React.FC<RestaurantHeaderProps> = ({ source, onClose }) => {
   const insets = useSafeAreaInsets();
   
   return (
     <View style={styles.headerContainer}>
       <Image 
-        source={{ uri: imageUri }} 
+        source={source} 
         style={styles.headerImage}
         resizeMode="cover"
       />

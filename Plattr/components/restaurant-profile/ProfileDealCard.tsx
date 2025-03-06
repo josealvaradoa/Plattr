@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { RestaurantDealCardProps } from './types';
-import { DealType } from '../../types/deals';
+import { Deal } from '../../types/deals';
 
 /**
  * ProfileDealCard Component (v3.0)
@@ -16,8 +16,8 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
   onViewDeal
 }) => {
   const [termsExpanded, setTermsExpanded] = useState(false);
-  const isExpired = deal.expirationDate ? new Date(deal.expirationDate) < new Date() : false;
-  const timeLeft = getTimeLeft(deal.expirationDate);
+  const isExpired = deal.endDate ? new Date(deal.endDate) < new Date() : false;
+  const timeLeft = getTimeLeft(deal.endDate);
   
   function getTimeLeft(expirationDate?: string): string {
     if (!expirationDate) return '';
@@ -36,12 +36,12 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
     }
   }
 
-  const getButtonColor = (dealType: DealType, isExpired: boolean) => {
+  const getButtonColor = (dealType: Deal['dealType'], isExpired: boolean) => {
     if (isExpired) return "#9CA3AF";
     switch (dealType) {
-      case DealType.REDEEMABLE:
+      case "redeemable":
         return "#4dbf4d";
-      case DealType.INFORMATIONAL:
+      case "informational":
         return "#3a92fc";
       default:
         return "#5e5e5e";
@@ -61,8 +61,8 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
 
   // Calculate redemption percentage for progress bar
   const getRedemptionPercentage = () => {
-    if (!deal.maxRedemptions || deal.remainingRedemptions === undefined) return 0;
-    return (deal.remainingRedemptions / deal.maxRedemptions) * 100;
+    if (!deal.maxRedemptions || deal.totalRedemptions === undefined) return 0;
+    return (deal.totalRedemptions / deal.maxRedemptions) * 100;
   };
 
   return (
@@ -87,10 +87,10 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
           </TouchableOpacity>
         )}
 
-        <Text style={styles.dealTitle}>{deal.dealDescription}</Text>
-        <Text style={styles.dealDetails}>{deal.dealDetails}</Text>
+        <Text style={styles.dealTitle}>{deal.title}</Text>
+        <Text style={styles.dealDetails}>{deal.description}</Text>
         
-        {deal.terms && deal.terms.length > 0 && (
+        {deal.termsAndConditions && deal.termsAndConditions.length > 0 && (
           <View style={styles.termsContainer}>
             <TouchableOpacity 
               style={styles.termsHeader}
@@ -108,7 +108,7 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
             
             {termsExpanded && (
               <View style={styles.termsContent}>
-                {deal.terms.map((term, index) => (
+                {deal.termsAndConditions.map((term: string, index: number) => (
                   <View key={index} style={styles.termItem}>
                     <Text style={styles.bulletPoint}>•</Text>
                     <Text style={styles.termText}>{term}</Text>
@@ -120,22 +120,22 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
         )}
         
         <View style={styles.redemptionInfo}>
-          {deal.expirationDate && (
+          {deal.endDate && (
             <View style={styles.infoItem}>
               <Ionicons name="calendar-outline" size={16} color="#8E8E93" />
               <Text style={styles.infoText}>
                 {isExpired ? 'Expired on: ' : 'Valid until: '} 
-                {formatDate(deal.expirationDate)}
+                {formatDate(deal.endDate)}
               </Text>
             </View>
           )}
           
-          {deal.maxRedemptions && deal.remainingRedemptions !== undefined && (
+          {deal.maxRedemptions && deal.totalRedemptions !== undefined && (
             <View>
               <View style={styles.infoItem}>
                 <Ionicons name="repeat-outline" size={16} color="#8E8E93" />
                 <Text style={styles.infoText}>
-                  {`${deal.remainingRedemptions} of ${deal.maxRedemptions} redemptions left`}
+                  {`${deal.totalRedemptions} of ${deal.maxRedemptions} redemptions left`}
                 </Text>
               </View>
               
@@ -164,14 +164,14 @@ const ProfileDealCard: React.FC<RestaurantDealCardProps> = ({
           <Ionicons 
             name={
               isExpired ? "time-outline" : 
-              deal.dealType === DealType.REDEEMABLE ? "ticket-outline" : "information-circle-outline"
+              deal.dealType === "redeemable" ? "ticket-outline" : "information-circle-outline"
             } 
             size={20} 
             color="white" 
             style={styles.buttonIcon}
           />
           <Text style={styles.viewDealText}>
-            {isExpired ? 'Expired' : deal.dealType === DealType.REDEEMABLE ? 'Redeem Deal' : 'View Details'}
+            {isExpired ? 'Expired' : deal.dealType === "redeemable" ? 'Redeem Deal' : 'View Details'}
           </Text>
         </TouchableOpacity>
       </View>

@@ -1,54 +1,66 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { RestaurantData } from '../../types/restaurant';
+import { Restaurant } from '../../types/restaurant';
+import { MenuItem } from '../../types/menuItem';
 import MenuCategories from './MenuCategories';
-import PopularItems from './PopularItems';
 import MenuItemCard from './MenuItemCard';
 
 interface MenuViewProps {
-  restaurant: RestaurantData;
+  restaurant: Restaurant;
+  menuItems: MenuItem[];
 }
 
-const MenuView: React.FC<MenuViewProps> = ({ restaurant }) => {
+const MenuView: React.FC<MenuViewProps> = ({ restaurant, menuItems }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   
   const handleSelectCategory = useCallback((category: string) => {
     setSelectedCategory(category);
   }, []);
   
+  // Extract categories from menu items
+  const categories = useMemo(() => {
+    if (!menuItems || menuItems.length === 0) return [];
+    
+    // Get unique categories
+    const uniqueCategories = Array.from(
+      new Set(menuItems.map(item => item.category))
+    );
+    
+    return uniqueCategories;
+  }, [menuItems]);
   
-  if (!restaurant.menu) {
+  if (!menuItems || menuItems.length === 0) {
     return (
       <View style={styles.emptyContainer}>
         <Ionicons name="restaurant-outline" size={48} color="#999" />
-        <Text style={styles.emptyText}>Menu not available</Text>
+        <Text style={styles.emptyText}>Menu not available</Text>  
         <Text style={styles.emptySubtext}>This restaurant hasn't uploaded their menu yet.</Text>
       </View>
     );
   }
   
   // Get popular items
-  const popularItems = restaurant.menu.items.filter(item => item.popular);
+  const popularItems = menuItems.filter(item => item.isPopular);
   
   // Filter items by selected category
   const filteredItems = selectedCategory === 'all'
-    ? restaurant.menu.items
-    : restaurant.menu.items.filter(item => item.category === selectedCategory);
+    ? menuItems
+    : menuItems.filter(item => item.category === selectedCategory);
   
   // Group items by category for display
-  const itemsByCategory = restaurant.menu.categories.reduce((acc, category) => {
+  const itemsByCategory = categories.reduce((acc, category) => {
     const items = filteredItems.filter(item => item.category === category);
     if (items.length > 0) {
       acc[category] = items;
     }
     return acc;
-  }, {} as Record<string, typeof restaurant.menu.items>);
+  }, {} as Record<string, MenuItem[]>);
   
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <MenuCategories 
-        categories={restaurant.menu.categories}
+        categories={categories}
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
       />

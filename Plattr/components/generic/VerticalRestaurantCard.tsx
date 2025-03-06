@@ -4,12 +4,13 @@ import { Star, MapPin } from 'lucide-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Tag from '../explore/Tag';
 import { RestaurantProfileCard } from '../restaurant-profile';
-import { RestaurantData } from '../../types/restaurant';
+import { Restaurant } from '../../types/restaurant';
 import DealModal from '../generic/DealModal';
-import { DealCardProps } from '../../types/deals';
+import { Deal } from '../../types/deals';
+import { getDealsByRestaurant } from '../../data/mockDeals';
 
 interface VerticalRestaurantCardProps {
-  restaurant: RestaurantData;
+  restaurant: Restaurant;
   onPress?: (restaurantId: string) => void;
 }
 
@@ -19,30 +20,21 @@ const VerticalRestaurantCard: React.FC<VerticalRestaurantCardProps> = ({ restaur
   const [profileVisible, setProfileVisible] = useState(false);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
   
+  // Get deals for this restaurant
+  const restaurantDeals = getDealsByRestaurant(restaurant.id);
+  
   // Manage animations for the deal modal overlay
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Handle different image source types (local or remote)
   const getImageSource = (): ImageSourcePropType => {
-    // Check if it's a local image (require format) or a string path
-    if (typeof restaurant.imageUrl === 'number') {
-      // It's a local image (result of require('./image.jpg'))
-      return restaurant.imageUrl as number;
-    } else if (typeof restaurant.imageUrl === 'string') {
-      // Check if it's a local path without http/https prefix
-      if (restaurant.imageUrl.startsWith('/') || restaurant.imageUrl.startsWith('./') || restaurant.imageUrl.startsWith('../')) {
-        // Handle local file path if needed
-        // For truly local files without require, you might need a different approach
-        // This depends on your specific file structure
-        return { uri: restaurant.imageUrl };
-      } else {
-        // Remote URL (S3 or other)
-        return { uri: restaurant.imageUrl };
-      }
+    // Use the primary image from the new restaurant structure
+    if (restaurant.imageUrls && restaurant.imageUrls.primary) {
+      return restaurant.imageUrls.primary;
     }
     
     // Fallback to a placeholder or default image
-    return require('../../assets/images/restaurants/resOne.jpg'); // Replace with your actual placeholder path
+    return require('../../assets/images/restaurants/resOne.jpg');
   };
 
   const handlePress = () => {
@@ -86,8 +78,11 @@ const VerticalRestaurantCard: React.FC<VerticalRestaurantCardProps> = ({ restaur
 
   // Find the selected deal if there is one
   const selectedDeal = selectedDealId 
-    ? restaurant.deals.find(deal => deal.id === selectedDealId) as DealCardProps 
+    ? restaurantDeals.find((deal: Deal) => deal.id === selectedDealId)
     : null;
+
+  // Calculate distance (in real app this would use the user's location)
+  const distance = `${(Math.random() * 3 + 0.5).toFixed(1)} Miles Away`;
 
   return (
     <>
@@ -132,7 +127,7 @@ const VerticalRestaurantCard: React.FC<VerticalRestaurantCardProps> = ({ restaur
           {/* Tags */}
           <View style={styles.tagsContainer}>
             {restaurant.tags.map((tag, index) => (
-              <Tag key={index} text={tag.text} variant={tag.variant} />
+              <Tag key={index} text={tag.text as any} variant={tag.variant as any} />
             ))}
           </View>
           
@@ -141,11 +136,11 @@ const VerticalRestaurantCard: React.FC<VerticalRestaurantCardProps> = ({ restaur
             <View style={styles.ratingContainer}>
               <Star size={16} color="#FFB800" />
               <Text style={styles.ratingText}>{restaurant.rating}</Text>
-              <Text style={styles.reviewCount}>({restaurant.reviews})</Text>
+              <Text style={styles.reviewCount}>({restaurant.reviewCount})</Text>
             </View>
             <View style={styles.distanceContainer}>
               <MapPin size={16} color="#8E8E93" />
-              <Text style={styles.distanceText}>{restaurant.distance}</Text>
+              <Text style={styles.distanceText}>{distance}</Text>
             </View>
           </View>
         </View>

@@ -1,5 +1,6 @@
 // types.ts
-import { DealType, DealCardProps } from '../../types/deals';
+import { ImageSourcePropType } from 'react-native';
+import { Deal } from '../../types/deals';
 
 export interface MenuItem {
   id: string;
@@ -21,7 +22,7 @@ export interface TabProps {
 export type TabType = 'deals' | 'menu' | 'about';
 
 export interface RestaurantDealCardProps {
-  deal: DealCardProps;
+  deal: Deal;
   isSaved: boolean;
   onSave: (dealId: string) => void;
   onViewDeal: () => void;
@@ -37,6 +38,6 @@ export interface TagPillProps {
 }
 
 export interface RestaurantHeaderProps {
-  imageUri: string;
+  source: ImageSourcePropType;
   onClose: () => void;
 }

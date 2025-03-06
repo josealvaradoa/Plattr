@@ -1,42 +1,48 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { 
+  View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform, ActivityIndicator 
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import RestaurantCard from '../../components/generic/RestaurantCard';
 import VerticalRestaurantCard from '../../components/generic/VerticalRestaurantCard';
-import { dareToTryRestaurants, trendingRestaurants } from '../../data/restaurantData';
-import { RestaurantData } from '../../types/restaurant';
+import { Restaurant } from '../../types/restaurant';
+import { 
+  getTrendingRestaurants, 
+  getDareToTryRestaurants,
+  getRestaurantsByCuisine 
+} from '../../data/restaurantData';
 
-// Categories data with emoji icons
+// Expanded Categories Data
 const categories = [
   { icon: "🍔", name: "Burger" },
   { icon: "🍕", name: "Pizza" },
+  { icon: "🥩", name: "American" },
   { icon: "🌮", name: "Mexican" },
+  { icon: "🍣", name: "Sushi" },
   { icon: "🍛", name: "Indian" },
-  { icon: "🍜", name: "Thai" },
-  { icon: "🥩", name: "Steak" }
+  { icon: "🥗", name: "Healthy" },
+  { icon: "🍷", name: "Wine & Dine" },
+  { icon: "🍜", name: "Asian Fusion" },
+  { icon: "🍹", name: "Bars & Cocktails" },
+  { icon: "🥞", name: "Brunch & Cafés" },
+  { icon: "🏠", name: "Local Favorites" }
 ];
-
-// Combine all restaurants for filtering
-// Adjust this based on your actual data structure and sources
-const allRestaurants = [...trendingRestaurants, ...dareToTryRestaurants];
 
 const ExplorePage = () => {
   const router = useRouter();
-  // State to track the selected category
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+
+  const trendingRestaurants = getTrendingRestaurants();
+  const dareToTryRestaurants = getDareToTryRestaurants();
   
-  // Filter restaurants based on selected category
-  // This assumes your restaurant data has a 'tags' array with tag objects that have a 'text' property
   const filteredRestaurants = selectedCategory 
-    ? allRestaurants.filter(restaurant => 
-        restaurant.tags.some(tag => tag.text === selectedCategory))
+    ? getRestaurantsByCuisine(selectedCategory)
     : [];
-  
-  // Handle category selection
+
   const handleCategoryPress = (categoryName: string) => {
-    // If the same category is selected, clear the filter
     if (selectedCategory === categoryName) {
       setSelectedCategory(null);
       return;
@@ -45,16 +51,9 @@ const ExplorePage = () => {
     setIsLoading(true);
     setSelectedCategory(categoryName);
     
-    // Simulate loading delay
     setTimeout(() => {
       setIsLoading(false);
     }, 600);
-  };
-
-  // Handle restaurant press
-  const handleRestaurantPress = (restaurantId: string) => {
-    console.log(`Restaurant pressed: ${restaurantId}`);
-    // This is handled by your existing RestaurantCard component
   };
 
   return (
@@ -74,7 +73,7 @@ const ExplorePage = () => {
           decelerationRate="fast"
           snapToAlignment="center"
         >
-          {categories.map((category, index) => (
+          {(showAllCategories ? categories : categories.slice(0, 5)).map((category, index) => (
             <TouchableOpacity
               key={index}
               style={[
@@ -93,11 +92,18 @@ const ExplorePage = () => {
               </Text>
             </TouchableOpacity>
           ))}
+          <TouchableOpacity
+            style={styles.seeAllButton}
+            onPress={() => setShowAllCategories(!showAllCategories)}
+          >
+            <Text style={styles.seeAllText}>
+              {showAllCategories ? "Show Less" : "See All"}
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
-        
-        {/* Show filtered restaurants or default view based on selection */}
+
+        {/* Filtered View */}
         {selectedCategory ? (
-          // Filtered view
           <View style={styles.filteredContainer}>
             <View style={styles.filteredHeader}>
               <Text style={styles.filteredHeaderTitle}>
@@ -117,11 +123,10 @@ const ExplorePage = () => {
               </View>
             ) : filteredRestaurants.length > 0 ? (
               <View style={styles.filteredResults}>
-                {filteredRestaurants.map((restaurant, index) => (
+                {filteredRestaurants.map((restaurantData, index) => (
                   <VerticalRestaurantCard 
                     key={index} 
-                    restaurant={restaurant as RestaurantData} 
-                    onPress={handleRestaurantPress}
+                    restaurant={restaurantData.restaurant}
                   />
                 ))}
               </View>
@@ -136,7 +141,6 @@ const ExplorePage = () => {
             )}
           </View>
         ) : (
-          // Default view - horizontal scrolling sections
           <>
             <View style={styles.sectionContainer}>
               <View style={styles.sectionHeader}>
@@ -152,15 +156,14 @@ const ExplorePage = () => {
                 decelerationRate="fast"
                 snapToAlignment="center"
               >
-                {trendingRestaurants.map((restaurant, index) => (
+                {trendingRestaurants.map((restaurantData, index) => (
                   <RestaurantCard 
                     key={index} 
-                    restaurant={restaurant as RestaurantData} 
-                    onPress={handleRestaurantPress}
+                    restaurant={restaurantData.restaurant}
                   />
                 ))}
               </ScrollView>
-            </View>
+            </View>   
 
             <View style={styles.sectionContainer}>
               <View style={styles.sectionHeader}>
@@ -176,11 +179,10 @@ const ExplorePage = () => {
                 decelerationRate="fast"
                 snapToAlignment="center"
               >
-                {dareToTryRestaurants.map((restaurant, index) => (
+                {dareToTryRestaurants.map((restaurantData, index) => (
                   <RestaurantCard 
                     key={index} 
-                    restaurant={restaurant as RestaurantData} 
-                    onPress={handleRestaurantPress}
+                    restaurant={restaurantData.restaurant}
                   />
                 ))}
               </ScrollView>
@@ -189,7 +191,6 @@ const ExplorePage = () => {
         )}
       </View>
       
-      {/* Add padding at the bottom for better scrolling experience */}
       <View style={styles.bottomPadding} />
     </ScrollView>
   );
@@ -323,6 +324,8 @@ const styles = StyleSheet.create({
   bottomPadding: {
     height: 40,
   },
+  seeAllButton: { paddingHorizontal: 16, paddingVertical: 12, backgroundColor: 'white', borderRadius: 24, marginRight: 8 },
+  seeAllText: { fontSize: 15, fontWeight: '500', color: '#007AFF' },
 });
 
 export default ExplorePage;

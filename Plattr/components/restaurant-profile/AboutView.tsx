@@ -2,10 +2,10 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { RestaurantData } from '../../types/restaurant';
+import { Restaurant } from '../../types/restaurant';
 
 interface AboutViewProps {
-  restaurant: RestaurantData;
+  restaurant: Restaurant;
 }
 
 const AboutView: React.FC<AboutViewProps> = ({ restaurant }) => {
@@ -27,9 +27,9 @@ const AboutView: React.FC<AboutViewProps> = ({ restaurant }) => {
   };
 
   const handleAddressPress = () => {
-    if (!restaurant.location) return;
+    if (!restaurant.address) return;
     
-    Linking.openURL(`https://maps.google.com/?q=${encodeURIComponent(restaurant.location)}`);
+    Linking.openURL(`https://maps.google.com/?q=${encodeURIComponent(restaurant.address.street)}`);
   };
 
   return (
@@ -67,7 +67,7 @@ const AboutView: React.FC<AboutViewProps> = ({ restaurant }) => {
           </TouchableOpacity>
         )}
         
-        {restaurant.location && (
+        {restaurant.address && (
           <TouchableOpacity 
             style={styles.contactItem} 
             onPress={handleAddressPress}
@@ -75,11 +75,11 @@ const AboutView: React.FC<AboutViewProps> = ({ restaurant }) => {
             accessibilityLabel="View restaurant location"
           >
             <Feather name="map-pin" size={18} color="#666" />
-            <Text style={styles.contactText}>{restaurant.location}</Text>
+            <Text style={styles.contactText}>{restaurant.address.street}, {restaurant.address.city}, {restaurant.address.state} {restaurant.address.zip}</Text>
           </TouchableOpacity>
         )}
         
-        {!restaurant.phoneNumber && !restaurant.website && !restaurant.location && (
+        {!restaurant.phoneNumber && !restaurant.website && !restaurant.address && (
           <Text style={styles.noContactText}>No contact information available.</Text>
         )}
       </View>

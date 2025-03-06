@@ -1,670 +1,669 @@
-// mock/restaurantData.ts
-import { RestaurantTag } from '../types/restaurant';
-import { DealCardProps, DealType } from '../types/deals';
+// restaurantData.ts
+// Updated to ensure consistency with deals.ts
 
-// Extended restaurant type that includes all necessary fields for the profile card
-export interface MenuItem {
-  id: string;
-  name: string;
-  description: string;
-  price: string;
-  imageUri?: string;
-  category: string;
-  popular?: boolean;
-  dietaryInfo?: string[];  // e.g., "Vegetarian", "Gluten-Free", "Vegan"
-}
+import { Restaurant } from '../types/restaurant';
+import { MenuItem } from '../types/menuItem';
+import { Deal } from '../types/deals';
+import { getDealsByRestaurant } from './mockDeals';
 
-export interface RestaurantData {
-  id: string; 
-  name: string;
-  tags: RestaurantTag[];
-  rating: string;
-  reviews: string;
-  distance: string;
-  imageUrl: string;
-  location?: string;
-  description?: string;
-  cuisine?: string[];
-  priceLevel?: number;
-  hours?: {
-    [key: string]: { open: string; close: string };
-  };
-  phoneNumber?: string;
-  website?: string;
-  deals: DealCardProps[];
-  menu?: {
-    categories: string[];
-    items: MenuItem[];
-  };
-}
-
-export const trendingRestaurants: RestaurantData[] = [
+// Mock restaurants data using the new schema
+export const restaurants: Restaurant[] = [
   {
-    id: "cochiloco-scotts",
-    name: "Restaurant Name",
-    tags: [
-      { text: "Mexican", variant: "mexican" },
-      { text: "Local", variant: "local" },
-      { text: "Fast", variant: "fast" }
-    ] as RestaurantTag[],
-    rating: '4.0',
-    reviews: '13000',
-    distance: "1.2 Miles Away",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    location: "1234 W Street St, Richmond, VA 23221",
-    description: "Authentic Mexican cantina in Scott's Addition serving street tacos, margaritas, and traditional Mexican fare in a vibrant, casual atmosphere with outdoor seating. Our handmade tortillas and fresh ingredients bring the flavors of Mexico to Richmond.",
-    cuisine: ["Mexican", "Tacos", "Margaritas"],
-    priceLevel: 2,
-    hours: {
-      "Monday": { open: "11:00 AM", close: "10:00 PM" },
-      "Tuesday": { open: "11:00 AM", close: "10:00 PM" },
-      "Wednesday": { open: "11:00 AM", close: "10:00 PM" },
-      "Thursday": { open: "11:00 AM", close: "11:00 PM" },
-      "Friday": { open: "11:00 AM", close: "12:00 AM" },
-      "Saturday": { open: "10:00 AM", close: "12:00 AM" },
-      "Sunday": { open: "10:00 AM", close: "9:00 PM" }
-    },
-    phoneNumber: "(804) 555-1234",
-    website: "www.cochilocorichmond.com",
-    deals: [
-      {
-        id: "cochiloco-deal1",
-        restaurantName: "Restaurant Name",
-        location: "1234 W Street St, Richmond, VA 23221",
-        rating: 4.0,
-        reviewCount: 13000,
-        dealDescription: "Taco Tuesday Special",
-        dealDetails: "Get 2 tacos for $6 every Tuesday. Choose from our signature carnitas, carne asada, or veggie options.",
-        distance: "1.2 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,
-        happeningNow: true,
-        contactInfo: {  
-          phone: "(804) 555-1234",
-          address: "3158 W Cary St, Richmond, VA 23221"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 5,
-        remainingRedemptions: 5,
-        terms: ["Valid only on Tuesdays", "Cannot be combined with other offers", "Dine-in only"],
-        isRedeemed: false
-      },
-      {
-        id: "cochiloco-deal2",
-        restaurantName: "Cochiloco | Scott's Addition",
-        location: "3158 W Cary St, Richmond, VA 23221",
-        rating: 4.0,
-        reviewCount: 13000,
-        dealDescription: "Happy Hour Margaritas",
-        dealDetails: "Enjoy $5 house margaritas and $3 chips & salsa during happy hour.",
-        distance: "1.2 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resThree.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,
-        happeningNow: false,
-        contactInfo: {
-          phone: "(804) 555-1234",
-          address: "3158 W Cary St, Richmond, VA 23221"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 10,
-        remainingRedemptions: 10,
-        terms: ["Valid Monday-Friday, 4-7PM", "Must be 21+ for alcoholic beverages", "Limit 2 per customer"],
-        isRedeemed: false
+    // Restaurant 1 - Can Can Brasserie
+    PK: "RESTAURANT#restaurant_201",
+    SK: "METADATA#restaurant_201",
+    GSI1PK: "LOCATION#dr5r7",
+    GSI1SK: "RESTAURANT#1",
+    GSI2PK: "CUISINE#French",
+    GSI2SK: "RESTAURANT#4.6#1",
+    
+    id: "restaurant_201",
+    name: "Can Can Brasserie",
+    description: "Authentic French cuisine in a casual setting with an extensive wine list and homemade pastries. Our Parisian-style brasserie features classic dishes and a lively atmosphere reminiscent of the cafés lining the boulevards of Paris.",
+    address: {
+      street: "3120 W Cary St",
+      city: "Richmond",
+      state: "VA",
+      zip: "23221",
+      coordinates: {
+        latitude: 37.5534,
+        longitude: -77.4512
       }
+    },
+    phoneNumber: "(804) 358-7274",
+    email: "info@cancanbrasserie.com",
+    website: "www.cancanbrasserie.com",
+    priceLevel: 3,
+    cuisines: ["French", "European", "Brunch"],
+    tags: [
+      { text: "French", variant: "local" },
+      { text: "Brunch", variant: "sitdown" },
+      { text: "Wine", variant: "local" }
     ],
-    menu: {
-      categories: ["Tacos", "Entrees", "Drinks", "Desserts"],
-      items: [
-        {
-          id: "cochiloco-item1",
-          name: "Carne Asada Tacos",
-          description: "Three street-style tacos with marinated grilled steak, onions, cilantro, and lime on handmade corn tortillas.",
-          price: "$12.99",
-          category: "Tacos",
-          popular: true,
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "cochiloco-item2",
-          name: "Enchiladas Verdes",
-          description: "Two corn tortillas stuffed with shredded chicken, topped with verde sauce, queso fresco, and Mexican crema. Served with rice and beans.",
-          price: "$15.99",
-          category: "Entrees",
-          popular: false,
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "cochiloco-item3",
-          name: "House Margarita",
-          description: "Our signature margarita made with silver tequila, fresh lime juice, and agave nectar. Available frozen or on the rocks.",
-          price: "$9.99",
-          category: "Drinks",
-          popular: true
-        },
-        {
-          id: "cochiloco-item4",
-          name: "Vegetarian Burrito Bowl",
-          description: "Cilantro-lime rice topped with black beans, roasted vegetables, guacamole, pico de gallo, and chipotle crema.",
-          price: "$13.99",
-          category: "Entrees",
-          dietaryInfo: ["Vegetarian", "Gluten-Free"]
-        },
-        {
-          id: "cochiloco-item5",
-          name: "Churros con Chocolate",
-          description: "Crispy cinnamon-sugar coated churros served with warm chocolate dipping sauce.",
-          price: "$7.99",
-          category: "Desserts",
-          popular: true,
-          dietaryInfo: ["Vegetarian"]
-        }
+    hours: {
+      "monday": { open: "11:00", close: "22:00" },
+      "tuesday": { open: "11:00", close: "22:00" },
+      "wednesday": { open: "11:00", close: "22:00" },
+      "thursday": { open: "11:00", close: "23:00" },
+      "friday": { open: "11:00", close: "23:00" },
+      "saturday": { open: "10:00", close: "23:00" },
+      "sunday": { open: "10:00", close: "21:00" }
+    },
+    rating: 4.6,
+    reviewCount: 1042,
+    imageUrls: {
+      primary: require('../assets/images/restaurants/resTwo.jpg'),
+      gallery: [
+        require('../assets/images/restaurants/resOne.jpg'),
+        require('../assets/images/restaurants/resFive.jpg'),
+        require('../assets/images/restaurants/resSix.jpg')
       ]
-    }
+    },
+    createdAt: "2024-09-15T14:30:00Z",
+    updatedAt: "2025-01-10T09:15:00Z",
+    isActive: true,
+    businessAccountId: "business_101"
   },
   {
-    id: "pinkys-richmond",
+    // Restaurant 2 - Lemaire Restaurant
+    PK: "RESTAURANT#restaurant_202",
+    SK: "METADATA#restaurant_202",
+    GSI1PK: "LOCATION#dr5r6",
+    GSI1SK: "RESTAURANT#2",
+    GSI2PK: "CUISINE#American",
+    GSI2SK: "RESTAURANT#4.7#1",
+    
+    id: "restaurant_202",
+    name: "Lemaire Restaurant",
+    description: "Upscale dining in the historic Jefferson Hotel featuring locally-sourced ingredients in Southern-inspired dishes. Lemaire combines the elegance of fine dining with a more approachable, contemporary experience.",
+    address: {
+      street: "101 W Franklin St",
+      city: "Richmond",
+      state: "VA",
+      zip: "23220",
+      coordinates: {
+        latitude: 37.5460,
+        longitude: -77.4427
+      }
+    },
+    phoneNumber: "(804) 649-4629",
+    email: "info@lemairerestaurant.com",
+    website: "www.lemairerestaurant.com",
+    priceLevel: 4,
+    cuisines: ["American", "Southern", "Fine Dining"],
+    tags: [
+      { text: "Southern", variant: "local" },
+      { text: "Fine Dining", variant: "sitdown" },
+      { text: "Cocktails", variant: "local" }
+    ],
+    hours: {
+      "monday": { open: "17:00", close: "22:00" },
+      "tuesday": { open: "17:00", close: "22:00" },
+      "wednesday": { open: "17:00", close: "22:00" },
+      "thursday": { open: "17:00", close: "22:00" },
+      "friday": { open: "17:00", close: "22:30" },
+      "saturday": { open: "17:00", close: "22:30" },
+      "sunday": { open: "17:00", close: "21:00" }
+    },
+    rating: 4.7,
+    reviewCount: 910,
+    imageUrls: {
+      primary: require('../assets/images/restaurants/resThree.jpg'),
+      gallery: [
+        require('../assets/images/restaurants/resOne.jpg'),
+        require('../assets/images/restaurants/resTwo.jpg'),
+        require('../assets/images/restaurants/resFour.jpg')
+      ]
+    },
+    createdAt: "2024-10-01T10:15:00Z",
+    updatedAt: "2025-01-05T11:20:00Z",
+    isActive: true,
+    businessAccountId: "business_102"
+  },
+  {
+    // Restaurant 3 - Lulu's
+    PK: "RESTAURANT#restaurant_203",
+    SK: "METADATA#restaurant_203",
+    GSI1PK: "LOCATION#dr5r7",
+    GSI1SK: "RESTAURANT#3",
+    GSI2PK: "CUISINE#Seafood",
+    GSI2SK: "RESTAURANT#4.4#1",
+    
+    id: "restaurant_203",
+    name: "Lulu's",
+    description: "Seafood-focused restaurant with a southern twist, featuring local catches and seasonal ingredients. Known for creative cocktails and raw bar selections in a stylish, industrial-chic space.",
+    address: {
+      street: "21 N 17th St",
+      city: "Richmond",
+      state: "VA",
+      zip: "23219",
+      coordinates: {
+        latitude: 37.5407,
+        longitude: -77.4360
+      }
+    },
+    phoneNumber: "(804) 555-9876",
+    email: "info@lulusrichmond.com",
+    website: "www.lulusrichmond.com",
+    priceLevel: 3,
+    cuisines: ["Seafood", "Southern", "Craft Cocktails"],
+    tags: [
+      { text: "Seafood", variant: "local" },
+      { text: "Southern", variant: "american" },
+      { text: "Craft Cocktails", variant: "sitdown" }
+    ],
+    hours: {
+      "monday": { open: "Closed", close: "Closed" },
+      "tuesday": { open: "17:00", close: "22:00" },
+      "wednesday": { open: "17:00", close: "22:00" },
+      "thursday": { open: "17:00", close: "22:00" },
+      "friday": { open: "17:00", close: "23:00" },
+      "saturday": { open: "16:00", close: "23:00" },
+      "sunday": { open: "11:00", close: "15:00" }
+    },
+    rating: 4.4,
+    reviewCount: 3800,
+    imageUrls: {
+      primary: require('../assets/images/restaurants/resFive.jpg'),
+      gallery: [
+        require('../assets/images/restaurants/resOne.jpg'),
+        require('../assets/images/restaurants/resSix.jpg'),
+        require('../assets/images/restaurants/resTwo.jpg')
+      ]
+    },
+    createdAt: "2024-11-10T09:30:00Z",
+    updatedAt: "2024-12-15T14:45:00Z",
+    isActive: true,
+    businessAccountId: "business_103"
+  },
+  {
+    // Restaurant 4 - Perly's
+    PK: "RESTAURANT#restaurant_103",
+    SK: "METADATA#restaurant_103",
+    GSI1PK: "LOCATION#dr5r6",
+    GSI1SK: "RESTAURANT#4",
+    GSI2PK: "CUISINE#Jewish",
+    GSI2SK: "RESTAURANT#4.6#1",
+    
+    id: "restaurant_103",
+    name: "Perly's Restaurant & Delicatessen",
+    description: "Classic Jewish deli and restaurant serving traditional favorites like matzo ball soup, knishes, and piled-high sandwiches. Our vintage decor and friendly service make this a downtown Richmond favorite for breakfast and lunch.",
+    address: {
+      street: "111 E Grace St",
+      city: "Richmond",
+      state: "VA",
+      zip: "23219",
+      coordinates: {
+        latitude: 37.5429,
+        longitude: -77.4372
+      }
+    },
+    phoneNumber: "(804) 555-3579",
+    email: "info@perlysrichmond.com",
+    website: "www.perlysrichmond.com",
+    priceLevel: 2,
+    cuisines: ["Jewish Deli", "Breakfast", "Sandwiches"],
+    tags: [
+      { text: "Jewish Deli", variant: "local" },
+      { text: "Breakfast", variant: "fast" },
+      { text: "Sandwiches", variant: "fast" }
+    ],
+    hours: {
+      "monday": { open: "08:00", close: "15:00" },
+      "tuesday": { open: "08:00", close: "15:00" },
+      "wednesday": { open: "08:00", close: "15:00" },
+      "thursday": { open: "08:00", close: "15:00" },
+      "friday": { open: "08:00", close: "15:00" },
+      "saturday": { open: "08:00", close: "15:00" },
+      "sunday": { open: "09:00", close: "15:00" }
+    },
+    rating: 4.6,
+    reviewCount: 4200,
+    imageUrls: {
+      primary: require('../assets/images/restaurants/resFour.jpg'),
+      gallery: [
+        require('../assets/images/restaurants/resOne.jpg'),
+        require('../assets/images/restaurants/resTwo.jpg'),
+        require('../assets/images/restaurants/resSix.jpg')
+      ]
+    },
+    createdAt: "2024-08-05T11:30:00Z",
+    updatedAt: "2024-12-01T09:15:00Z",
+    isActive: true,
+    businessAccountId: "business_104"
+  },
+  {
+    // Restaurant 5 - ZZQ Texas Craft Barbeque
+    PK: "RESTAURANT#restaurant_104",
+    SK: "METADATA#restaurant_104",
+    GSI1PK: "LOCATION#dr5r8",
+    GSI1SK: "RESTAURANT#5",
+    GSI2PK: "CUISINE#BBQ",
+    GSI2SK: "RESTAURANT#4.8#1",
+    
+    id: "restaurant_104",
+    name: "ZZQ Texas Craft Barbeque",
+    description: "Authentic Central Texas-style barbecue featuring slow-smoked brisket, ribs, and house-made sausages. Our meats are smoked with oak and hickory for up to 16 hours, creating the perfect bark and smoke ring.",
+    address: {
+      street: "3201 W Moore St",
+      city: "Richmond",
+      state: "VA",
+      zip: "23230",
+      coordinates: {
+        latitude: 37.5675,
+        longitude: -77.4890
+      }
+    },
+    phoneNumber: "(804) 555-8427",
+    email: "info@zzqrva.com",
+    website: "www.zzqrva.com",
+    priceLevel: 2,
+    cuisines: ["Barbecue", "Texas", "Southern"],
+    tags: [
+      { text: "BBQ", variant: "american" },
+      { text: "Craft Beer", variant: "local" },
+      { text: "Outdoor Seating", variant: "sitdown" }
+    ],
+    hours: {
+      "monday": { open: "Closed", close: "Closed" },
+      "tuesday": { open: "Closed", close: "Closed" },
+      "wednesday": { open: "11:00", close: "20:00" },
+      "thursday": { open: "11:00", close: "20:00" },
+      "friday": { open: "11:00", close: "22:00" },
+      "saturday": { open: "11:00", close: "22:00" },
+      "sunday": { open: "11:00", close: "18:00" }
+    },
+    rating: 4.8,
+    reviewCount: 935,
+    imageUrls: {
+      primary: require('../assets/images/restaurants/resTwo.jpg'),
+      gallery: [
+        require('../assets/images/restaurants/resOne.jpg'),
+        require('../assets/images/restaurants/resFour.jpg'),
+        require('../assets/images/restaurants/resSix.jpg')
+      ]
+    },
+    createdAt: "2024-07-12T14:30:00Z",
+    updatedAt: "2024-11-20T10:15:00Z",
+    isActive: true,
+    businessAccountId: "business_105"
+  },
+  {
+    // Restaurant 6 - Pinky's
+    PK: "RESTAURANT#restaurant_206",
+    SK: "METADATA#restaurant_206",
+    GSI1PK: "LOCATION#dr5r7",
+    GSI1SK: "RESTAURANT#6",
+    GSI2PK: "CUISINE#American",
+    GSI2SK: "RESTAURANT#4.5#2",
+    
+    id: "restaurant_206",
     name: "Pinky's",
+    description: "Upscale casual American eatery featuring gourmet burgers, craft cocktails, and seasonal dishes made with locally-sourced ingredients. Our cozy atmosphere and patio seating make Pinky's a neighborhood favorite for brunch, dinner, and everything in between.",
+    address: {
+      street: "3126 W Cary St",
+      city: "Richmond",
+      state: "VA",
+      zip: "23221",
+      coordinates: {
+        latitude: 37.5527,
+        longitude: -77.4482
+      }
+    },
+    phoneNumber: "(804) 555-7890",
+    email: "info@pinkysrva.com",
+    website: "www.pinkysrva.com",
+    priceLevel: 3,
+    cuisines: ["American", "Burgers", "Craft Cocktails"],
     tags: [
       { text: "American", variant: "american" },
       { text: "Local", variant: "local" },
       { text: "Sit Down", variant: "sitdown" }
-    ] as RestaurantTag[],
-    rating: "4.5",
-    reviews: "8000",
-    distance: "0.8 Miles Away",
-    imageUrl: require('../assets/images/restaurants/resFour.jpg'),
-    location: "3126 W Cary St, Richmond, VA 23221",
-    description: "Upscale casual American eatery in Carytown featuring gourmet burgers, craft cocktails, and seasonal dishes made with locally-sourced ingredients. Our cozy atmosphere and patio seating make Pinky's a neighborhood favorite for brunch, dinner, and everything in between.",
-    cuisine: ["American", "Burgers", "Craft Cocktails"],
-    priceLevel: 3,
-    hours: {
-      "Monday": { open: "11:30 AM", close: "9:00 PM" },
-      "Tuesday": { open: "11:30 AM", close: "9:00 PM" },
-      "Wednesday": { open: "11:30 AM", close: "9:00 PM" },
-      "Thursday": { open: "11:30 AM", close: "10:00 PM" },
-      "Friday": { open: "11:30 AM", close: "11:00 PM" },
-      "Saturday": { open: "10:00 AM", close: "11:00 PM" },
-      "Sunday": { open: "10:00 AM", close: "8:00 PM" }
-    },
-    phoneNumber: "(804) 555-7890",
-    website: "www.pinkysrva.com",
-    deals: [
-      {
-        id: "pinkys-deal1",
-        restaurantName: "Pinky's",
-        location: "3126 W Cary St, Richmond, VA 23221",
-        rating: 4.5,
-        reviewCount: 8000,
-        dealDescription: "Weekend Brunch Special",
-        dealDetails: "Enjoy our signature brunch menu with $8 mimosa carafes every Saturday and Sunday morning.",
-        distance: "0.8 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resFive.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.INFORMATIONAL,
-        happeningNow: false,
-        contactInfo: {
-          phone: "(804) 555-7890",
-          address: "3126 W Cary St, Richmond, VA 23221"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 3,
-        remainingRedemptions: 3,
-        terms: ["Valid Saturday-Sunday, 10AM-2PM", "One carafe per table", "Must purchase brunch entree"],
-        isRedeemed: false
-      },
-      {
-        id: "pinkys-deal2",
-        restaurantName: "Pinky's",
-        location: "3126 W Cary St, Richmond, VA 23221",
-        rating: 4.5,
-        reviewCount: 8000,
-        dealDescription: "Burger & Beer Wednesdays",
-        dealDetails: "Get any signature burger with a local craft beer for just $15.",
-        distance: "0.8 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resSix.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.INFORMATIONAL,
-        happeningNow: true,
-        contactInfo: {
-          phone: "(804) 555-7890",
-          address: "3126 W Cary St, Richmond, VA 23221"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 5,
-        remainingRedemptions: 4,
-        terms: ["Valid Wednesdays, 4PM-9PM", "One deal per customer", "Dine-in only"],
-        isRedeemed: false
-      }
     ],
-    menu: {
-      categories: ["Burgers", "Sides", "Brunch", "Drinks", "Entrees"],
-      items: [
-        {
-          id: "pinkys-item1",
-          name: "The Pinky Burger",
-          description: "House specialty 8oz grass-fed beef patty with aged cheddar, caramelized onions, house-made pickles, and signature sauce on a toasted brioche bun. Served with hand-cut fries.",
-          price: "$16.99",
-          category: "Burgers",
-          popular: true
-        },
-        {
-          id: "pinkys-item2",
-          name: "Truffle Mac & Cheese",
-          description: "Cavatappi pasta in a creamy four-cheese sauce with black truffle oil and toasted breadcrumbs.",
-          price: "$14.99",
-          category: "Sides",
-          popular: true,
-          dietaryInfo: ["Vegetarian"]
-        },
-        {
-          id: "pinkys-item3",
-          name: "Avocado Toast",
-          description: "Artisanal sourdough toast topped with smashed avocado, heirloom tomatoes, microgreens, and a poached egg. Served with mixed greens.",
-          price: "$13.99",
-          category: "Brunch",
-          dietaryInfo: ["Vegetarian"]
-        },
-        {
-          id: "pinkys-item4",
-          name: "Bourbon Old Fashioned",
-          description: "Small-batch bourbon with house-made bitters, sugar, and orange peel. Served over a large ice cube.",
-          price: "$12.99",
-          category: "Drinks",
-          popular: false
-        },
-        {
-          id: "pinkys-item5",
-          name: "Quinoa Power Bowl",
-          description: "Tri-color quinoa with roasted seasonal vegetables, kale, chickpeas, avocado, and lemon-tahini dressing.",
-          price: "$15.99",
-          category: "Entrees",
-          dietaryInfo: ["Vegan", "Gluten-Free"]
-        }
-      ]
-    }
-  },
-  {
-    id: "thai-lotus-fan",
-    name: "Thai Lotus",
-    tags: [
-      { text: "Thai", variant: "local" },
-      { text: "Spicy", variant: "fast" }
-    ] as RestaurantTag[],
-    rating: "4.2",
-    reviews: "3000",
-    distance: "2.1 Miles Away",
-    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    location: "6940 Forest Hill Ave, Richmond, VA 23225",
-    description: "Authentic Thai cuisine served in a relaxed setting with elegant touches. Our menu features traditional favorites like Pad Thai and Green Curry, along with chef's specialties. We pride ourselves on using fresh ingredients and balancing the complex flavors of sweet, sour, salty, and spicy that Thai cuisine is known for.",
-    cuisine: ["Thai", "Asian", "Curry"],
-    priceLevel: 2,
     hours: {
-      "Monday": { open: "11:00 AM", close: "9:30 PM" },
-      "Tuesday": { open: "11:00 AM", close: "9:30 PM" },
-      "Wednesday": { open: "11:00 AM", close: "9:30 PM" },
-      "Thursday": { open: "11:00 AM", close: "9:30 PM" },
-      "Friday": { open: "11:00 AM", close: "10:30 PM" },
-      "Saturday": { open: "12:00 PM", close: "10:30 PM" },
-      "Sunday": { open: "12:00 PM", close: "9:00 PM" }
+      "monday": { open: "11:30", close: "21:00" },
+      "tuesday": { open: "11:30", close: "21:00" },
+      "wednesday": { open: "11:30", close: "21:00" },
+      "thursday": { open: "11:30", close: "22:00" },
+      "friday": { open: "11:30", close: "23:00" },
+      "saturday": { open: "10:00", close: "23:00" },
+      "sunday": { open: "10:00", close: "20:00" }
     },
-    phoneNumber: "(804) 555-4321",
-    website: "www.thailotusrva.com",
-    deals: [
-      {
-        id: "thai-lotus-deal1",
-        restaurantName: "Thai Lotus",
-        location: "6940 Forest Hill Ave, Richmond, VA 23225",
-        rating: 4.2,
-        reviewCount: 3000,
-        dealDescription: "Lunch Special",
-        dealDetails: "Monday-Friday lunch specials include an entree, spring roll, and soup for just $12.99.",
-        distance: "2.1 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resFour.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,
-        happeningNow: true,
-        contactInfo: {
-          phone: "(804) 555-4321",
-          address: "6940 Forest Hill Ave, Richmond, VA 23225"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 20,
-        remainingRedemptions: 15,
-        terms: ["Valid Monday-Friday, 11AM-3PM", "Dine-in only", "One special per person"],
-        isRedeemed: false
-      },
-      {
-        id: "thai-lotus-deal2",
-        restaurantName: "Thai Lotus",
-        location: "6940 Forest Hill Ave, Richmond, VA 23225",
-        rating: 4.2,
-        reviewCount: 3000,
-        dealDescription: "Family Pack Sunday",
-        dealDetails: "Feed the whole family with our special family pack: 2 appetizers, 3 entrees, and 1 dessert for $49.99.",
-        distance: "2.1 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,
-        happeningNow: false,
-        contactInfo: {
-          phone: "(804) 555-4321",
-          address: "6940 Forest Hill Ave, Richmond, VA 23225"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 10,
-        remainingRedemptions: 8,
-        terms: ["Valid Sundays, 4PM-9PM", "Dine-in or takeout", "Family pack serves 4-5 people"],
-        isRedeemed: false
-      }
-    ],
-    menu: {
-      categories: ["Noodles", "Curry", "Desserts", "Soups", "Drinks"],
-      items: [
-        {
-          id: "thai-lotus-item1",
-          name: "Pad Thai",
-          description: "Rice noodles stir-fried with eggs, bean sprouts, green onions, and your choice of protein in our signature tamarind sauce. Topped with crushed peanuts and lime.",
-          price: "$14.99",
-          category: "Noodles",
-          popular: true,
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "thai-lotus-item2",
-          name: "Green Curry",
-          description: "Aromatic green curry with bamboo shoots, bell peppers, Thai basil, and your choice of protein. Served with jasmine rice.",
-          price: "$15.99",
-          category: "Curry",
-          popular: true,
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "thai-lotus-item3",
-          name: "Mango Sticky Rice",
-          description: "Sweet coconut sticky rice topped with fresh mango slices and toasted sesame seeds. A traditional Thai dessert.",
-          price: "$7.99",
-          category: "Desserts",
-          dietaryInfo: ["Vegetarian", "Gluten-Free"]
-        },
-        {
-          id: "thai-lotus-item4",
-          name: "Tom Yum Soup",
-          description: "Hot and sour lemongrass soup with mushrooms, tomatoes, and your choice of protein. Flavored with lime juice, galangal, and Thai chili.",
-          price: "$6.99",
-          category: "Soups",
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "thai-lotus-item5",
-          name: "Thai Iced Tea",
-          description: "Sweetened Thai tea topped with condensed milk. A refreshing complement to spicy dishes.",
-          price: "$3.99",
-          category: "Drinks",
-          popular: false,
-          dietaryInfo: ["Vegetarian"]
-        }
+    rating: 4.5,
+    reviewCount: 8000,
+    imageUrls: {
+      primary: require('../assets/images/restaurants/resFour.jpg'),
+      gallery: [
+        require('../assets/images/restaurants/resFive.jpg'),
+        require('../assets/images/restaurants/resSix.jpg'),
+        require('../assets/images/restaurants/resOne.jpg')
       ]
-    }
+    },
+    createdAt: "2024-09-01T12:30:00Z",
+    updatedAt: "2024-12-10T14:15:00Z",
+    isActive: true,
+    businessAccountId: "business_106"
   }
 ];
 
-export const dareToTryRestaurants: RestaurantData[] = [
+// Sample menu items for restaurants using the new schema
+export const menuItems: MenuItem[] = [
+  // Menu items for Can Can Brasserie
   {
-    id: "lulus-richmond",
-    name: "Lulu's",
-    tags: [
-      { text: "Seafood", variant: "local" },
-      { text: "Southern", variant: "american" }
-    ] as RestaurantTag[],
-    rating: "4.4",
-    reviews: "3800",
-    distance: "1.3 Miles Away",
-    imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
-    location: "21 N 17th St, Richmond, VA 23219",
-    description: "Seafood-focused restaurant with a southern twist, featuring local catches and seasonal ingredients. Known for creative cocktails and raw bar selections in a stylish, industrial-chic space.",
-    cuisine: ["Seafood", "Southern", "Craft Cocktails"],
-    priceLevel: 3,
-    hours: {
-      "Monday": { open: "Closed", close: "Closed" },
-      "Tuesday": { open: "5:00 PM", close: "10:00 PM" },
-      "Wednesday": { open: "5:00 PM", close: "10:00 PM" },
-      "Thursday": { open: "5:00 PM", close: "10:00 PM" },
-      "Friday": { open: "5:00 PM", close: "11:00 PM" },
-      "Saturday": { open: "4:00 PM", close: "11:00 PM" },
-      "Sunday": { open: "11:00 AM", close: "3:00 PM" }
-    },
-    phoneNumber: "(804) 555-9876",
-    website: "www.lulusrichmond.com",
-    deals: [
-      {
-        id: "lulus-deal1",
-        restaurantName: "Lulu's",
-        location: "21 N 17th St, Richmond, VA 23219",
-        rating: 4.4,
-        reviewCount: 3800,
-        dealDescription: "Raw Bar Happy Hour",
-        dealDetails: "Half-price oysters and $7 house wine during happy hour.",
-        distance: "1.3 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resFive.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,
-        happeningNow: true,
-        contactInfo: {
-          phone: "(804) 555-9876",
-          address: "21 N 17th St, Richmond, VA 23219"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 8,
-        remainingRedemptions: 6,
-        terms: ["Valid Tuesday-Thursday, 5PM-7PM", "Bar area only", "No reservations for happy hour"],
-        isRedeemed: false
-      },
-      {
-        id: "lulus-deal2",
-        restaurantName: "Lulu's",
-        location: "21 N 17th St, Richmond, VA 23219",
-        rating: 4.4,
-        reviewCount: 3800,
-        dealDescription: "Sunday Brunch",
-        dealDetails: "Enjoy our Southern brunch with $5 bloody marys and mimosas.",
-        distance: "1.3 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resSix.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,
-        happeningNow: false,
-        contactInfo: {
-          phone: "(804) 555-9876",
-          address: "21 N 17th St, Richmond, VA 23219"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 4,
-        remainingRedemptions: 4,
-        terms: ["Valid Sundays, 11AM-3PM", "Limit 2 drinks per person", "Must purchase brunch entree"],
-        isRedeemed: false
-      }
-    ],
-    menu: {
-      categories: ["Raw Bar", "Entrees", "Drinks", "Desserts"],
-      items: [
-        {
-          id: "lulus-item1",
-          name: "East Coast Oysters",
-          description: "Half dozen fresh local oysters served on ice with mignonette, cocktail sauce, and lemon.",
-          price: "$18.99",
-          category: "Raw Bar",
-          popular: true,
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "lulus-item2",
-          name: "Shrimp & Grits",
-          description: "Creamy stone-ground grits topped with sautéed Gulf shrimp, andouille sausage, bell peppers, and a Cajun cream sauce.",
-          price: "$24.99",
-          category: "Entrees",
-          popular: true,
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "lulus-item3",
-          name: "Seafood Boil",
-          description: "Low country boil with snow crab legs, shrimp, andouille sausage, corn on the cob, and red potatoes. Served with drawn butter and Old Bay seasoning.",
-          price: "$34.99",
-          category: "Entrees",
-          popular: false,
-          dietaryInfo: ["Gluten-Free"]
-        },
-        {
-          id: "lulus-item4",
-          name: "Bourbon Peach Smash",
-          description: "Small-batch Virginia bourbon with muddled fresh peaches, mint, lemon juice, and simple syrup. Served over crushed ice.",
-          price: "$13.99",
-          category: "Drinks",
-          popular: true
-        },
-        {
-          id: "lulus-item5",
-          name: "Southern Banana Pudding",
-          description: "Homemade vanilla pudding layered with fresh bananas, vanilla wafers, and topped with whipped cream and a caramel drizzle.",
-          price: "$8.99",
-          category: "Desserts",
-          dietaryInfo: ["Vegetarian"]
-        }
-      ]
-    }
+    PK: "RESTAURANT#restaurant_201",
+    SK: "MENUITEM#item_001",
+    id: "item_001",
+    name: "Croque Monsieur",
+    description: "Classic French sandwich with ham, Gruyère cheese, and béchamel sauce on house-made bread.",
+    price: 14.99,
+    category: "Lunch",
+    imageUrl: require('../assets/images/restaurants/resOne.jpg'),
+    isPopular: true,
+    dietaryInfo: [],
+    createdAt: "2024-11-01T10:00:00Z",
+    updatedAt: "2024-11-01T10:00:00Z",
+    isActive: true
   },
   {
-    id: "perlys-richmond",
-    name: "Perly's",
-    tags: [
-      { text: "Jewish Deli", variant: "local" },
-      { text: "Breakfast", variant: "fast" }
-    ] as RestaurantTag[],
-    rating: "4.6",
-    reviews: "4200",
-    distance: "0.7 Miles Away",
+    PK: "RESTAURANT#restaurant_201",
+    SK: "MENUITEM#item_002",
+    id: "item_002",
+    name: "Steak Frites",
+    description: "Pan-seared hanger steak with maitre d'hotel butter and hand-cut fries.",
+    price: 28.99,
+    category: "Dinner",
+    imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
+    isPopular: true,
+    dietaryInfo: ["Gluten-Free"],
+    createdAt: "2024-11-01T10:30:00Z",
+    updatedAt: "2024-11-01T10:30:00Z",
+    isActive: true
+  },
+  {
+    PK: "RESTAURANT#restaurant_201",
+    SK: "MENUITEM#item_003",
+    id: "item_003",
+    name: "French Onion Soup",
+    description: "Traditional onion soup with beef broth, caramelized onions, and melted Gruyère.",
+    price: 10.99,
+    category: "Appetizers",
+    imageUrl: null,
+    isPopular: false,
+    dietaryInfo: [],
+    createdAt: "2024-11-01T11:00:00Z",
+    updatedAt: "2024-11-01T11:00:00Z",
+    isActive: true
+  },
+  
+  // Menu items for Lemaire Restaurant
+  {
+    PK: "RESTAURANT#restaurant_202",
+    SK: "MENUITEM#item_101",
+    id: "item_101",
+    name: "Shrimp & Grits",
+    description: "Virginia shrimp, Anson Mills grits, Surry sausage, roasted peppers, and shellfish butter.",
+    price: 32.99,
+    category: "Entrees",
+    imageUrl: require('../assets/images/restaurants/resThree.jpg'),
+    isPopular: true,
+    dietaryInfo: ["Gluten-Free"],
+    createdAt: "2024-11-05T09:00:00Z",
+    updatedAt: "2024-11-05T09:00:00Z",
+    isActive: true
+  },
+  {
+    PK: "RESTAURANT#restaurant_202",
+    SK: "MENUITEM#item_102",
+    id: "item_102",
+    name: "Bourbon Old Fashioned",
+    description: "Virginia bourbon, house-made bitters, sugar, and orange peel.",
+    price: 14.99,
+    category: "Cocktails",
+    imageUrl: null,
+    isPopular: true,
+    dietaryInfo: ["Vegan", "Gluten-Free"],
+    createdAt: "2024-11-05T09:30:00Z",
+    updatedAt: "2024-11-05T09:30:00Z",
+    isActive: true
+  },
+  
+  // Menu items for Lulu's
+  {
+    PK: "RESTAURANT#restaurant_203",
+    SK: "MENUITEM#item_201",
+    id: "item_201",
+    name: "Oysters on the Half Shell",
+    description: "Half dozen fresh local oysters served with mignonette and cocktail sauce.",
+    price: 18.99,
+    category: "Raw Bar",
+    imageUrl: require('../assets/images/restaurants/resFive.jpg'),
+    isPopular: true,
+    dietaryInfo: ["Gluten-Free"],
+    createdAt: "2024-11-10T11:30:00Z",
+    updatedAt: "2024-11-10T11:30:00Z",
+    isActive: true
+  },
+  {
+    PK: "RESTAURANT#restaurant_203",
+    SK: "MENUITEM#item_202",
+    id: "item_202",
+    name: "Crab Cakes",
+    description: "Jumbo lump crab cakes with remoulade sauce, mixed greens, and lemon.",
+    price: 30.99,
+    category: "Entrees",
+    imageUrl: require('../assets/images/restaurants/resSix.jpg'),
+    isPopular: true,
+    dietaryInfo: [],
+    createdAt: "2024-11-10T12:00:00Z",
+    updatedAt: "2024-11-10T12:00:00Z",
+    isActive: true
+  },
+  
+  // Menu items for Perly's
+  {
+    PK: "RESTAURANT#restaurant_103",
+    SK: "MENUITEM#item_301",
+    id: "item_301",
+    name: "The Reuben",
+    description: "House-cured corned beef piled high with sauerkraut, Swiss cheese, and Russian dressing on grilled rye bread. Served with a pickle spear and potato salad.",
+    price: 15.99,
+    category: "Sandwiches",
     imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-    location: "111 E Grace St, Richmond, VA 23219",
-    description: "Classic Jewish deli and restaurant serving traditional favorites like matzo ball soup, knishes, and piled-high sandwiches. Our vintage decor and friendly service make this a downtown Richmond favorite for breakfast and lunch.",
-    cuisine: ["Jewish Deli", "Breakfast", "Sandwiches"],
-    priceLevel: 2,
-    hours: {
-      "Monday": { open: "8:00 AM", close: "3:00 PM" },
-      "Tuesday": { open: "8:00 AM", close: "3:00 PM" },
-      "Wednesday": { open: "8:00 AM", close: "3:00 PM" },
-      "Thursday": { open: "8:00 AM", close: "3:00 PM" },
-      "Friday": { open: "8:00 AM", close: "3:00 PM" },
-      "Saturday": { open: "8:00 AM", close: "3:00 PM" },
-      "Sunday": { open: "9:00 AM", close: "3:00 PM" }
-    },
-    phoneNumber: "(804) 555-3579",
-    website: "www.perlysrichmond.com",
-    deals: [
-      {
-        id: "perlys-deal1",
-        restaurantName: "Perly's",
-        location: "111 E Grace St, Richmond, VA 23219",
-        rating: 4.6,
-        reviewCount: 4200,
-        dealDescription: "Weekday Early Bird",
-        dealDetails: "Get 15% off your bill when you dine between 8-9AM, Monday-Friday.",
-        distance: "0.7 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resOne.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,
-        happeningNow: true,
-        contactInfo: {
-          phone: "(804) 555-3579",
-          address: "111 E Grace St, Richmond, VA 23219"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 30,
-        remainingRedemptions: 22,
-        terms: ["Valid Monday-Friday, 8AM-9AM", "Entire bill discount", "Cannot be combined with other offers"],
-        isRedeemed: false
-      },
-      {
-        id: "perlys-deal2",
-        restaurantName: "Perly's",
-        location: "111 E Grace St, Richmond, VA 23219",
-        rating: 4.6,
-        reviewCount: 4200,
-        dealDescription: "Sandwich & Soup Combo",
-        dealDetails: "Get a half sandwich and cup of soup for $10 (save $4).",
-        distance: "0.7 Miles Away",
-        imageUrl: require('../assets/images/restaurants/resFour.jpg'),
-        onPress: () => {},
-        onViewDeal: () => {},
-        dealType: DealType.REDEEMABLE,    
-        happeningNow: false,
-        contactInfo: {
-          phone: "(804) 555-3579",
-          address: "111 E Grace St, Richmond, VA 23219"
-        },
-        expirationDate: "2025-12-31",
-        maxRedemptions: 50,
-        remainingRedemptions: 38,
-        terms: ["Valid Monday-Friday, 11AM-2PM", "Select sandwiches only", "Additional charge for premium soups"],
-        isRedeemed: false,
-        redemptionCode: "LUNCH10"
-      }
-    ],
-    menu: {
-      categories: ["Sandwiches", "Soups", "Breakfast", "Sides"],
-      items: [
-        {
-          id: "perlys-item1",
-          name: "The Reuben",
-          description: "House-cured corned beef piled high with sauerkraut, Swiss cheese, and Russian dressing on grilled rye bread. Served with a pickle spear and potato salad.",
-          price: "$15.99",
-          category: "Sandwiches",
-          popular: true
-        },
-        {
-          id: "perlys-item2",
-          name: "Matzo Ball Soup",
-          description: "Classic chicken soup with vegetables, fresh herbs, and a fluffy matzo ball. Served with a slice of challah bread.",
-          price: "$6.99",
-          category: "Soups",
-          popular: true,
-          dietaryInfo: ["Dairy-Free"]
-        },
-        {
-          id: "perlys-item3",
-          name: "Challah French Toast",
-          description: "Thick slices of house-made challah bread dipped in cinnamon-vanilla batter and grilled to perfection. Served with maple syrup and fresh berries.",
-          price: "$13.99",
-          category: "Breakfast",
-          popular: true,
-          dietaryInfo: ["Vegetarian"]
-        },
-        {
-          id: "perlys-item4",
-          name: "Potato Latkes",
-          description: "Crispy potato pancakes served with apple sauce and sour cream.",
-          price: "$9.99",
-          category: "Sides",
-          dietaryInfo: ["Vegetarian"]
-        },
-        {
-          id: "perlys-item5",
-          name: "Smoked Salmon Plate",
-          description: "House-smoked Nova salmon served with cream cheese, capers, red onions, tomatoes, and your choice of bagel.",
-          price: "$16.99",
-          category: "Breakfast",
-          popular: false
-        }
-      ]
-    }
+    isPopular: true,
+    dietaryInfo: [],
+    createdAt: "2024-10-15T11:30:00Z",
+    updatedAt: "2024-10-15T11:30:00Z",
+    isActive: true
+  },
+  {
+    PK: "RESTAURANT#restaurant_103",
+    SK: "MENUITEM#item_302",
+    id: "item_302",
+    name: "Matzo Ball Soup",
+    description: "Classic chicken soup with vegetables, fresh herbs, and a fluffy matzo ball. Served with a slice of challah bread.",
+    price: 6.99,
+    category: "Soups",
+    imageUrl: null,
+    isPopular: true,
+    dietaryInfo: ["Dairy-Free"],
+    createdAt: "2024-10-15T12:00:00Z",
+    updatedAt: "2024-10-15T12:00:00Z",
+    isActive: true
+  },
+  
+  // Adding menu items for ZZQ
+  {
+    PK: "RESTAURANT#restaurant_104",
+    SK: "MENUITEM#item_401",
+    id: "item_401",
+    name: "Brisket Plate",
+    description: "Half-pound of slow-smoked prime brisket with two sides and housemade pickles.",
+    price: 22.99,
+    category: "Barbecue Plates",
+    imageUrl: require('../assets/images/restaurants/resTwo.jpg'),
+    isPopular: true,
+    dietaryInfo: ["Gluten-Free"],
+    createdAt: "2024-10-20T11:00:00Z",
+    updatedAt: "2024-10-20T11:00:00Z",
+    isActive: true
+  },
+  {
+    PK: "RESTAURANT#restaurant_104",
+    SK: "MENUITEM#item_402",
+    id: "item_402",
+    name: "Jalapeño Cheddar Sausage",
+    description: "House-made pork sausage studded with jalapeños and cheddar cheese.",
+    price: 8.99,
+    category: "À La Carte",
+    imageUrl: null,
+    isPopular: true,
+    dietaryInfo: ["Gluten-Free"],
+    createdAt: "2024-10-20T11:30:00Z",
+    updatedAt: "2024-10-20T11:30:00Z",
+    isActive: true
+  },
+  
+  // Adding menu items for Pinky's
+  {
+    PK: "RESTAURANT#restaurant_206",
+    SK: "MENUITEM#item_501",
+    id: "item_501",
+    name: "Signature Burger",
+    description: "House-ground beef patty with aged cheddar, caramelized onions, house pickles, and special sauce on a brioche bun.",
+    price: 16.99,
+    category: "Burgers",
+    imageUrl: require('../assets/images/restaurants/resFour.jpg'),
+    isPopular: true,
+    dietaryInfo: [],
+    createdAt: "2024-09-20T10:00:00Z",
+    updatedAt: "2024-09-20T10:00:00Z",
+    isActive: true
+  },
+  {
+    PK: "RESTAURANT#restaurant_206",
+    SK: "MENUITEM#item_502",
+    id: "item_502",
+    name: "Avocado Toast",
+    description: "Sourdough toast with smashed avocado, poached eggs, pickled red onion, and espelette pepper.",
+    price: 12.99,
+    category: "Brunch",
+    imageUrl: require('../assets/images/restaurants/resFive.jpg'),
+    isPopular: true,
+    dietaryInfo: ["Vegetarian"],
+    createdAt: "2024-09-20T10:30:00Z",
+    updatedAt: "2024-09-20T10:30:00Z",
+    isActive: true
   }
 ];
+
+// Restaurant data with associated deals and menu items
+export interface RestaurantWithDetails {
+  restaurant: Restaurant;
+  deals: Deal[];
+  menuItems: MenuItem[];
+}
+
+// Helper functions to get data for trending and dare to try sections
+
+// Get restaurant with all associated data
+export const getRestaurantWithDetails = (restaurantId: string): RestaurantWithDetails | null => {
+  const restaurant = restaurants.find(r => r.id === restaurantId);
+  if (!restaurant) return null;
+  
+  const deals = getDealsByRestaurant(restaurantId);
+  const restaurantMenuItems = menuItems.filter(item => item.PK === `RESTAURANT#${restaurantId}`);
+  
+  return {
+    restaurant,
+    deals,
+    menuItems: restaurantMenuItems
+  };
+};
+
+// Generate trending restaurants data
+export const getTrendingRestaurants = (limit: number = 2): RestaurantWithDetails[] => {
+  // Sort by rating (highest first)
+  const topRatedRestaurants = [...restaurants]
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, limit);
+  
+  return topRatedRestaurants.map(restaurant => ({
+    restaurant,
+    deals: getDealsByRestaurant(restaurant.id),
+    menuItems: menuItems.filter(item => item.PK === `RESTAURANT#${restaurant.id}`)
+  }));
+};
+
+// Generate "dare to try" restaurants data - restaurants with unusual or unique concepts
+export const getDareToTryRestaurants = (limit: number = 2): RestaurantWithDetails[] => {
+  // In a real implementation, this would use some criteria to find unique restaurants
+  // For mock data, we'll just pick a specific set
+  const dareToTryIds = ["restaurant_203", "restaurant_103"];
+  
+  return dareToTryIds
+    .map(id => {
+      const restaurant = restaurants.find(r => r.id === id);
+      if (!restaurant) return null;
+      
+      return {
+        restaurant,
+        deals: getDealsByRestaurant(id),
+        menuItems: menuItems.filter(item => item.PK === `RESTAURANT#${id}`)
+      };
+    })
+    .filter((item): item is RestaurantWithDetails => item !== null)
+    .slice(0, limit);
+};
+
+// Get restaurants by cuisine type
+export const getRestaurantsByCuisine = (cuisineType: string): RestaurantWithDetails[] => {
+  const matchingRestaurants = restaurants.filter(r => 
+    r.cuisines.some(c => c.toLowerCase() === cuisineType.toLowerCase())
+  );
+  
+  return matchingRestaurants.map(restaurant => ({
+    restaurant,
+    deals: getDealsByRestaurant(restaurant.id),
+    menuItems: menuItems.filter(item => item.PK === `RESTAURANT#${restaurant.id}`)
+  }));
+};
+
+// Helper function to calculate distance between two coordinates (in miles)
+export const calculateDistance = (
+  lat1: number, lon1: number, 
+  lat2: number, lon2: number
+): number => {
+  const R = 3958.8; // Earth's radius in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distance = R * c;
+  
+  return parseFloat(distance.toFixed(1)); // Round to 1 decimal place
+};
+
+// Get restaurants near a location
+export const getNearbyRestaurants = (
+  latitude: number, 
+  longitude: number, 
+  radiusMiles: number = 5
+): RestaurantWithDetails[] => {
+  const nearbyRestaurants = restaurants.filter(restaurant => {
+    const distance = calculateDistance(
+      latitude, longitude,
+      restaurant.address.coordinates.latitude,
+      restaurant.address.coordinates.longitude
+    );
+    return distance <= radiusMiles;
+  });
+  
+  return nearbyRestaurants.map(restaurant => ({
+    restaurant,
+    deals: getDealsByRestaurant(restaurant.id),
+    menuItems: menuItems.filter(item => item.PK === `RESTAURANT#${restaurant.id}`)
+  }));
+};
